@@ -20,16 +20,16 @@
   <title>Game: Some simple games - Fomalhaut 's Blog</title>
 
   
-    <meta name="description" content="欢迎光临！ 下面是一个贪吃蛇小游戏。点击“开始”按钮启动游戏，启动后页面将自动滚动至游戏区域。游戏中的虚拟控制按钮直接覆盖在游戏画布上，方便触控操作。吃掉红色方块可计分，碰到边界或自身则游戏结束，结束后可点击“重新开始”按钮重新游戏。                   上     左     下     右         点击开始游戏   开始    (function() {     con">
+    <meta name="description" content="欢迎光临！ 下面是一个贪吃蛇小游戏          点击开始游戏   开始      &#x2F;* 保持页面背景为空白，文字颜色为默认 *&#x2F;   body {     background: #fff;     color: #000;     font-family: Arial, sans-serif;     margin: 0;     padding: 0;     text-align: c">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Some simple games">
 <meta property="og:url" content="https://fomalhaut9918.github.io/wiki/game/index.html">
 <meta property="og:site_name" content="Fomalhaut &#39;s Blog">
-<meta property="og:description" content="欢迎光临！ 下面是一个贪吃蛇小游戏。点击“开始”按钮启动游戏，启动后页面将自动滚动至游戏区域。游戏中的虚拟控制按钮直接覆盖在游戏画布上，方便触控操作。吃掉红色方块可计分，碰到边界或自身则游戏结束，结束后可点击“重新开始”按钮重新游戏。                   上     左     下     右         点击开始游戏   开始    (function() {     con">
+<meta property="og:description" content="欢迎光临！ 下面是一个贪吃蛇小游戏          点击开始游戏   开始      &#x2F;* 保持页面背景为空白，文字颜色为默认 *&#x2F;   body {     background: #fff;     color: #000;     font-family: Arial, sans-serif;     margin: 0;     padding: 0;     text-align: c">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://gcore.jsdelivr.net/gh/cdn-x/emoji/qq/%E7%88%B1%E4%BD%A0.gif">
-<meta property="article:published_time" content="2025-04-03T15:57:51.145Z">
-<meta property="article:modified_time" content="2025-04-03T15:57:51.145Z">
+<meta property="article:published_time" content="2025-04-03T16:52:32.144Z">
+<meta property="article:modified_time" content="2025-04-03T16:52:32.144Z">
 <meta property="article:author" content="Fomalhaut">
 <meta property="article:tag" content="blog">
 <meta name="twitter:card" content="summary">
@@ -88,7 +88,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/game/index.html">Game</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-04-03T15:57:51.145Z">2025-04-03</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-04-03T16:52:32.144Z">2025-04-03</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -99,24 +99,35 @@
     </div>
     
   </div>
-  </div><article class="md-text content"><h1 id="欢迎光临！"><a href="#欢迎光临！" class="headerlink" title="欢迎光临！ "></a>欢迎光临！ <span class="tag-plugin emoji"><img no-lazy="" class="inline lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/emoji/qq/爱你.gif"/></span></h1><p>下面是一个贪吃蛇小游戏。点击“开始”按钮启动游戏，启动后页面将自动滚动至游戏区域。游戏中的虚拟控制按钮直接覆盖在游戏画布上，方便触控操作。吃掉红色方块可计分，碰到边界或自身则游戏结束，结束后可点击“重新开始”按钮重新游戏。</p>
-<!-- 游戏区域容器，同时自适应屏幕大小 -->
-<div id="gameContainer" style="position: relative; max-width: 600px; width: 90%; margin: auto;">
-  <!-- 自适应宽高的游戏画布：宽度100%，高度自动保持比例 -->
-  <canvas id="snakeCanvas" width="600" height="600" style="display: block; width: 100%; height: auto; border: 2px solid #333; background-color: #f0f0f0;"></canvas>
-  <!-- 虚拟控制按钮覆盖在画布上，方便移动端操作 -->
-  <div id="touchControlsOverlay" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px;">
-    <button class="controlBtn" data-dir="up" style="padding: 10px; font-size: 16px;">上</button>
-    <button class="controlBtn" data-dir="left" style="padding: 10px; font-size: 16px;">左</button>
-    <button class="controlBtn" data-dir="down" style="padding: 10px; font-size: 16px;">下</button>
-    <button class="controlBtn" data-dir="right" style="padding: 10px; font-size: 16px;">右</button>
-  </div>
+  </div><article class="md-text content"><h1 id="欢迎光临！"><a href="#欢迎光临！" class="headerlink" title="欢迎光临！ "></a>欢迎光临！ <span class="tag-plugin emoji"><img no-lazy="" class="inline lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/emoji/qq/爱你.gif"/></span></h1><p>下面是一个贪吃蛇小游戏</p>
+<div id="gameContainer" style="position: relative; max-width: 600px; width: 90%; margin: 40px auto; overflow: hidden; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); background: #fff;">
+  <canvas id="snakeCanvas" width="600" height="600" style="display: block; width: 100%; height: auto; border: none; background-color: #f0f0f0; border-radius: 12px;"></canvas>
 </div>
 
 <div style="text-align: center; margin-top: 20px;">
-  <div id="gameMessage" style="font-size: 20px;">点击开始游戏</div>
-  <button id="startBtn" style="padding: 10px 20px; margin-top: 10px;">开始</button>
+  <div id="gameMessage" style="font-size: 22px; font-weight: 500;">点击开始游戏</div>
+  <button id="startBtn" style="padding: 12px 24px; margin-top: 12px; font-size: 16px; border: none; border-radius: 6px; background-color: #3333cc; color: #fff; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: background-color 0.3s;">开始</button>
 </div>
+
+<style>
+  /* 保持页面背景为空白，文字颜色为默认 */
+  body {
+    background: #fff;
+    color: #000;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  /* 禁止页面在游戏区域滚动 */
+  #gameContainer {
+    touch-action: none;
+  }
+  /* 按钮悬停效果 */
+  #startBtn:hover {
+    background-color: #222299;
+  }
+</style>
 
 <script>
 (function() {
@@ -125,17 +136,20 @@
     const box = 20;
     const canvasSize = 600;
     let snake, food, direction, score, gameOver;
-  
-    // 固定更新步长（单位秒），例如0.1秒
+
+    // 固定更新步长（单位秒）
     const fixedDelta = 0.1;
     let accumulator = 0;
     let lastTime = performance.now();
-  
+
     let running = false;
     const gameMessage = document.getElementById('gameMessage');
     const startBtn = document.getElementById('startBtn');
 
-    // 初始化游戏状态，同时将游戏容器滚动到视口中央
+    // 手势检测变量
+    let touchStartX = 0, touchStartY = 0;
+
+    // 初始化游戏状态，并确保游戏区域处于焦点位置
     function initGame() {
         snake = [
             { x: Math.floor(canvasSize / (2 * box)) * box, y: Math.floor(canvasSize / (2 * box)) * box }
@@ -146,13 +160,13 @@
         gameOver = false;
         gameMessage.innerText = "";
         startBtn.style.display = 'none';
-        // 自动滚动页面，使游戏区域居中显示
+        // 自动滚动并聚焦游戏容器
         document.getElementById('gameContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
         lastTime = performance.now();
         accumulator = 0;
     }
 
-    // 生成食物，确保不会生成在蛇身上
+    // 生成不会出现在蛇身上的食物
     function generateFood() {
         let foodItem;
         do {
@@ -164,7 +178,7 @@
         return foodItem;
     }
 
-    // 检查(x, y)是否与数组中任一点重合
+    // 检查 (x, y) 是否与蛇体中任一点重合
     function collision(x, y, array) {
         for (let i = 0; i < array.length; i++) {
             if (x === array[i].x && y === array[i].y) return true;
@@ -181,7 +195,7 @@
             case 'up':    head.y -= box; break;
             case 'down':  head.y += box; break;
         }
-        // 检查碰撞（边界或自身）
+        // 检查边界和自身碰撞
         if (head.x < 0 || head.y < 0 || head.x >= canvasSize || head.y >= canvasSize || collision(head.x, head.y, snake)) {
             gameOver = true;
             return;
@@ -195,9 +209,10 @@
         }
     }
 
-    // 绘制游戏状态（此处可扩展插值平滑效果）
+    // 绘制当前状态
     function draw() {
         ctx.clearRect(0, 0, canvasSize, canvasSize);
+        // 绘制渐变背景
         let gradient = ctx.createLinearGradient(0, 0, canvasSize, canvasSize);
         gradient.addColorStop(0, '#f0f8ff');
         gradient.addColorStop(1, '#f0f0f0');
@@ -208,7 +223,7 @@
         ctx.fillStyle = 'red';
         ctx.fillRect(food.x, food.y, box, box);
 
-        // 绘制蛇
+        // 绘制蛇体，蛇头更深色
         for (let i = 0; i < snake.length; i++) {
             ctx.fillStyle = i === 0 ? '#3333cc' : '#66c2a5';
             ctx.fillRect(snake[i].x, snake[i].y, box, box);
@@ -222,7 +237,7 @@
         ctx.fillText("Score: " + score, 5, canvasSize - 5);
     }
 
-    // 主游戏循环：利用requestAnimationFrame、固定步长更新，并通过插值使动画更流畅
+    // 主游戏循环：利用 requestAnimationFrame 结合固定步长更新
     function gameLoop(timestamp) {
         if (!running) return;
         let dt = (timestamp - lastTime) / 1000;
@@ -275,20 +290,36 @@
         }
     });
 
-    // 移动端虚拟控制：触控事件绑定
-    const controlButtons = document.querySelectorAll('.controlBtn');
-    controlButtons.forEach(btn => {
-        btn.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            const dir = btn.getAttribute('data-dir');
-            if (!gameOver) {
-                if (dir === 'up' && direction !== 'down') direction = 'up';
-                else if (dir === 'left' && direction !== 'right') direction = 'left';
-                else if (dir === 'down' && direction !== 'up') direction = 'down';
-                else if (dir === 'right' && direction !== 'left') direction = 'right';
+    // 移动端手势：通过 touchstart、touchmove 和 touchend 实现滑动控制
+    canvas.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        const touch = e.changedTouches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+    }, {passive: false});
+
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+    }, {passive: false});
+
+    canvas.addEventListener('touchend', function(e) {
+        const touch = e.changedTouches[0];
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX > 20 && direction !== 'left') {
+                direction = 'right';
+            } else if (deltaX < -20 && direction !== 'right') {
+                direction = 'left';
             }
-        });
-    });
+        } else {
+            if (deltaY > 20 && direction !== 'up') {
+                direction = 'down';
+            } else if (deltaY < -20 && direction !== 'down') {
+                direction = 'up';
+            }
+        }
+    }, {passive: false});
 
     // 开始或重新开始游戏的按钮事件
     startBtn.addEventListener('click', function() {
@@ -301,7 +332,7 @@
 })();
 </script>
 
-<p style="text-align: center;">使用键盘或覆盖在画面上的按钮操控方向，挑战你的反应速度！</p>
+<p style="text-align: center;">使用键盘（WASD）或滑动手势操控方向，挑战你的反应速度！</p>
 <div class="article-footer fs14"></div>
 </article>
 
