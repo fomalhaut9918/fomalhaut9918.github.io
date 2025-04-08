@@ -17,18 +17,18 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>Game: 五子棋游戏 - Fomalhaut 's Blog</title>
+  <title>Game: 五子棋游戏 (AI增强版) - Fomalhaut 's Blog</title>
 
   
-    <meta name="description" content="欢迎来到五子棋游戏游戏开始前请先选择先手或后手（玩家选择先手则执黑，其余执白），游戏结束后支持重新开始游戏。另外，游戏支持两步确认落子：第一次点击显示预落子效果，第二次点击确认落子。电脑最后一次落子处以红色圆环标出，帮助直观查看电脑决策。    &#x2F;* 页面基础样式 *&#x2F;   body {     background: #f8f8f8; &#x2F;* Slightly softer background">
+    <meta name="description" content="欢迎来到五子棋游戏 (AI增强版)内置AI经过优化，使用基于棋型的估价函数、极大极小搜索与α-β剪枝及走法排序。游戏开始前请先选择先手或后手（玩家选择先手则执黑，其余执白），游戏结束后支持重新开始游戏。另外，游戏支持两步确认落子：第一次点击显示预落子效果，第二次点击确认落子。电脑最后一次落子处以红色圆环标出，帮助直观查看电脑决策。    &#x2F;* 页面基础样式 *&#x2F;   body {     back">
 <meta property="og:type" content="website">
-<meta property="og:title" content="五子棋游戏">
+<meta property="og:title" content="五子棋游戏 (AI增强版)">
 <meta property="og:url" content="https://fomalhaut9918.github.io/wiki/game/index.html">
 <meta property="og:site_name" content="Fomalhaut &#39;s Blog">
-<meta property="og:description" content="欢迎来到五子棋游戏游戏开始前请先选择先手或后手（玩家选择先手则执黑，其余执白），游戏结束后支持重新开始游戏。另外，游戏支持两步确认落子：第一次点击显示预落子效果，第二次点击确认落子。电脑最后一次落子处以红色圆环标出，帮助直观查看电脑决策。    &#x2F;* 页面基础样式 *&#x2F;   body {     background: #f8f8f8; &#x2F;* Slightly softer background">
+<meta property="og:description" content="欢迎来到五子棋游戏 (AI增强版)内置AI经过优化，使用基于棋型的估价函数、极大极小搜索与α-β剪枝及走法排序。游戏开始前请先选择先手或后手（玩家选择先手则执黑，其余执白），游戏结束后支持重新开始游戏。另外，游戏支持两步确认落子：第一次点击显示预落子效果，第二次点击确认落子。电脑最后一次落子处以红色圆环标出，帮助直观查看电脑决策。    &#x2F;* 页面基础样式 *&#x2F;   body {     back">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-04-08T13:25:12.927Z">
-<meta property="article:modified_time" content="2025-04-08T13:25:12.927Z">
+<meta property="article:published_time" content="2025-04-08T13:38:40.648Z">
+<meta property="article:modified_time" content="2025-04-08T13:38:40.648Z">
 <meta property="article:author" content="Fomalhaut">
 <meta property="article:tag" content="blog">
 <meta name="twitter:card" content="summary">
@@ -86,112 +86,72 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/game/index.html">Game</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-04-08T13:25:12.927Z">2025-04-08</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-04-08T13:38:40.648Z">2025-04-08</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>五子棋游戏</span></h1>
+        <h1 class="text title"><span>五子棋游戏 (AI增强版)</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><h1 id="欢迎来到五子棋游戏"><a href="#欢迎来到五子棋游戏" class="headerlink" title="欢迎来到五子棋游戏"></a>欢迎来到五子棋游戏</h1><p>游戏开始前请先选择先手或后手（玩家选择先手则执黑，其余执白），游戏结束后支持重新开始游戏。<br>另外，游戏支持两步确认落子：第一次点击显示预落子效果，第二次点击确认落子。<br>电脑最后一次落子处以红色圆环标出，帮助直观查看电脑决策。</p>
+  </div><article class="md-text content"><h1 id="欢迎来到五子棋游戏-AI增强版"><a href="#欢迎来到五子棋游戏-AI增强版" class="headerlink" title="欢迎来到五子棋游戏 (AI增强版)"></a>欢迎来到五子棋游戏 (AI增强版)</h1><p>内置AI经过优化，使用基于棋型的估价函数、极大极小搜索与α-β剪枝及走法排序。<br>游戏开始前请先选择先手或后手（玩家选择先手则执黑，其余执白），游戏结束后支持重新开始游戏。<br>另外，游戏支持两步确认落子：第一次点击显示预落子效果，第二次点击确认落子。<br>电脑最后一次落子处以红色圆环标出，帮助直观查看电脑决策。</p>
 <style>
   /* 页面基础样式 */
   body {
-    background: #f8f8f8; /* Slightly softer background */
-    color: #333; /* Standard text color */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font stack */
+    background: #f8f8f8;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     text-align: center;
     line-height: 1.6;
   }
-  /* Prevent scrolling on the game area on touch devices */
-  #gameContainer {
-    touch-action: none;
-  }
+  #gameContainer { touch-action: none; }
   /* Button styling */
   button {
-    padding: 12px 24px;
-    margin: 10px 6px;
-    font-size: 16px;
-    border: none;
-    border-radius: 6px;
-    color: #fff;
-    cursor: pointer;
+    padding: 12px 24px; margin: 10px 6px; font-size: 16px;
+    border: none; border-radius: 6px; color: #fff; cursor: pointer;
     transition: background-color 0.3s ease, opacity 0.3s ease;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
-  button:hover {
-    opacity: 0.9;
-  }
-  button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-      opacity: 0.7;
-  }
-  #firstBtn { background-color: #2c3e50; } /* Dark Blue */
-  #secondBtn { background-color: #8e44ad; } /* Purple */
-  #restartBtn { background-color: #27ae60; } /* Green */
-
+  button:hover { opacity: 0.9; }
+  button:disabled { background-color: #ccc; cursor: not-allowed; opacity: 0.7; }
+  #firstBtn { background-color: #2c3e50; }
+  #secondBtn { background-color: #8e44ad; }
+  #restartBtn { background-color: #27ae60; }
   /* Game container styling */
   #gameContainer {
-    position: relative;
-    max-width: 600px;
-    width: 90%; /* Responsive width */
-    margin: 30px auto; /* Adjusted margin */
-    overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15); /* Softer shadow */
-    background: #fdf6e3; /* Board background */
-    aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
+    position: relative; max-width: 600px; width: 90%;
+    margin: 30px auto; overflow: hidden; border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    background: #fdf6e3; aspect-ratio: 1 / 1;
   }
-
   /* Canvas styling */
   #gomokuCanvas {
-    display: block;
-    width: 100%;
-    height: 100%; /* Fill container */
-    border: none;
-    background: #fdf6e3; /* Same as container, or transparent */
-    border-radius: 12px; /* Match container */
+    display: block; width: 100%; height: 100%;
+    border: none; background: #fdf6e3; border-radius: 12px;
   }
-
   #gameMessage {
-    font-size: 20px; /* Slightly smaller */
-    font-weight: 500;
-    margin-top: 0; /* Removed default margin */
-    margin-bottom: 15px; /* Space before buttons */
-    color: #555;
+    font-size: 20px; font-weight: 500;
+    margin-top: 0; margin-bottom: 15px; color: #555; min-height: 24px;
   }
-  /* Adding a class for the intro text below the H1 */
   .info-text {
-      font-size: 14px;
-      color: #666;
-      margin-top: 10px; /* Reduced top margin */
-      margin-bottom: 20px; /* Space before game container */
-      padding: 0 15px; /* Add padding on smaller screens */
+      font-size: 14px; color: #666; margin-top: 10px; margin-bottom: 20px;
+      padding: 0 15px;
   }
-  /* Style for H1 */
-  h1 {
-      margin-top: 20px; /* Space above title */
-      margin-bottom: 10px; /* Space below title */
-      color: #333;
-  }
-
+  h1 { margin-top: 20px; margin-bottom: 10px; color: #333; }
 </style>
 
-<h1>欢迎来到五子棋游戏</h1>
+<h1>欢迎来到五子棋游戏 (AI增强版)</h1>
 <p class="info-text">
   内置AI使用极大极小搜索与α-β剪枝。选择先手执黑，后手执白。<br>
   单击棋盘预落子，再次单击确认。电脑最后落子以红色圆环标出。
 </p>
 
 <div id="gameContainer">
-  <!-- 画布尺寸设置为640x640 for high resolution, CSS handles display size -->
   <canvas id="gomokuCanvas" width="640" height="640"></canvas>
 </div>
 
@@ -203,42 +163,44 @@
   <button id="restartBtn" style="display: none;">重新开始游戏</button>
 </div>
 
+<p style="text-align: center; font-size: 14px; color: #666; margin-top: 20px;">
+  点击棋盘交点进行落子。第一次点击显示预落子效果，第二次点击确认落子。<br>电脑落子将使用与玩家不同的颜色，并以红色圆环标出其最后一步落子。
+</p>
+
 <script>
 (function() {
-    // --- Configuration ---
-    const boardSize = 15;       // Standard 15x15 board
-    const internalCanvasSize = 640; // High internal resolution
-    const margin = 30;          // Increased margin for better edge spacing
-    const MAX_DEPTH = 3;        // AI search depth (adjust for performance)
-    const WIN_CONDITION = 5;    // 5 in a row to win
+    // --- 配置 ---
+    const boardSize = 15;
+    const internalCanvasSize = 640;
+    const margin = 30;
+    const MAX_DEPTH = 4;        // 搜索深度 (注意: 深度4可能较慢, 3更安全)
+    const WIN_CONDITION = 5;
+    const CANDIDATE_RADIUS = 2; // 候选走法搜索半径 (1或2)
 
-    // --- DOM Elements ---
+    // --- DOM 元素 ---
     const canvas = document.getElementById('gomokuCanvas');
     const ctx = canvas.getContext('2d');
     const gameMessage = document.getElementById('gameMessage');
     const firstBtn = document.getElementById('firstBtn');
     const secondBtn = document.getElementById('secondBtn');
     const restartBtn = document.getElementById('restartBtn');
-    const gameContainer = document.getElementById('gameContainer'); // Needed for aspect ratio
 
-    // --- Game State ---
-    let board = [];             // 0: empty, 1: black, 2: white
-    let turn = "";              // "player", "computer", or "" (before start)
-    let gameOver = true;        // Start in game over state until first/second chosen
-    let playerIsBlack = true;   // Player's color choice
-    let playerPiece = 1;        // Piece value for the player
-    let aiPiece = 2;            // Piece value for the AI
-    let isAiComputing = false;  // Flag to prevent clicks during AI turn
-    let pendingMove = null;     // {i, j} for two-step confirmation
-    let lastComputerMove = null;// {i, j} to highlight AI's last move
+    // --- 游戏状态 ---
+    let board = [];             // 0: 空, 1: 黑, 2: 白
+    let turn = "";              // "player", "computer", ""
+    let gameOver = true;
+    let playerIsBlack = true;
+    let playerPiece = 1;
+    let aiPiece = 2;
+    let isAiComputing = false;
+    let pendingMove = null;     // 待确认走法 {i, j}
+    let lastComputerMove = null;// AI最后落子 {i, j}
 
-    // Calculate cell size based on internal resolution and margin
     const cellSize = (internalCanvasSize - 2 * margin) / (boardSize - 1);
 
     // ===========================================
-    // Initialization and Game Control Functions
+    // 初始化与游戏控制
     // ===========================================
-
     function initBoard() {
         board = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
         lastComputerMove = null;
@@ -247,408 +209,266 @@
 
     function setupGame(playerStarts) {
         playerIsBlack = playerStarts;
-        if (playerIsBlack) {
-            playerPiece = 1; // Black
-            aiPiece = 2;     // White
-            turn = "player";
-            gameMessage.innerText = "游戏开始，请您落子 (黑棋)";
-        } else {
-            playerPiece = 2; // White
-            aiPiece = 1;     // Black
-            turn = "computer";
-            gameMessage.innerText = "游戏开始，电脑先手 (黑棋)";
-        }
+        playerPiece = playerIsBlack ? 1 : 2;
+        aiPiece = playerIsBlack ? 2 : 1;
+        turn = playerIsBlack ? "player" : "computer";
+        gameMessage.innerText = playerIsBlack ? "游戏开始，请您落子 (黑棋)" : "游戏开始，电脑先手 (黑棋)";
+
         gameOver = false;
         isAiComputing = false;
         initBoard();
         drawBoard();
 
-        // Disable selection buttons, show restart button
         firstBtn.disabled = true;
         secondBtn.disabled = true;
         restartBtn.style.display = "inline-block";
 
-        // If computer starts, initiate its move
         if (turn === "computer") {
-            // Add a slight delay for the user to see the initial board
-             setTimeout(computerMoveWrapper, 500);
+             // AI先手默认下中间
+             const center = Math.floor(boardSize / 2);
+             if (board[center][center] === 0) {
+                 board[center][center] = aiPiece;
+                 lastComputerMove = { i: center, j: center };
+                 drawBoard();
+                 turn = "player";
+                 gameMessage.innerText = "轮到你了，请落子。";
+             } else {
+                 setTimeout(computerMoveWrapper, 200); // 如果中间被占则正常计算
+             }
         }
     }
 
     function restartGame() {
-        gameOver = true;
-        turn = "";
-        isAiComputing = false; // Reset computing flag
+        gameOver = true; turn = ""; isAiComputing = false;
         gameMessage.innerText = "请选择是否先手：";
-        firstBtn.disabled = false;
-        secondBtn.disabled = false;
+        firstBtn.disabled = false; secondBtn.disabled = false;
         restartBtn.style.display = "none";
-        initBoard(); // Clear board data
-        drawBoard(); // Redraw empty board
+        initBoard(); drawBoard();
     }
 
     function endGame(winnerPiece) {
-        gameOver = true;
-        isAiComputing = false; // Ensure AI stops if it was thinking
+        gameOver = true; isAiComputing = false;
         let winnerText = "";
-        if (winnerPiece === playerPiece) {
-            winnerText = "恭喜你，你赢了！🎉";
-        } else if (winnerPiece === aiPiece) {
-            winnerText = "很遗憾，你输了。🤖";
-        } else {
-             winnerText = "平局！"; // Should be rare in Gomoku
-        }
+        if (winnerPiece === playerPiece) winnerText = "恭喜你，你赢了！🎉";
+        else if (winnerPiece === aiPiece) winnerText = "很遗憾，你输了。🤖";
+        else winnerText = "平局！";
         gameMessage.innerText = "游戏结束 - " + winnerText;
-        restartBtn.style.display = "inline-block"; // Ensure restart is visible
-        pendingMove = null; // Clear any pending move visually
-        drawBoard(); // Redraw to remove pending move ghost
+        restartBtn.style.display = "inline-block";
+        pendingMove = null; drawBoard();
     }
 
-     // Check if the board is full (draw condition)
     function checkDraw() {
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {
-                if (board[i][j] === 0) {
-                    return false; // Found an empty spot
-                }
+                if (board[i][j] === 0) return false;
             }
         }
-        return true; // No empty spots left
+        return true;
     }
 
     // ===========================================
-    // Drawing Functions (Unchanged from previous version)
+    // 绘图函数 (基本不变)
     // ===========================================
-
     function drawBoard() {
-        // Clear canvas
         ctx.clearRect(0, 0, internalCanvasSize, internalCanvasSize);
-
-        // Draw background
-        ctx.fillStyle = "#fdf6e3"; // Light beige background
-        ctx.fillRect(0, 0, internalCanvasSize, internalCanvasSize);
-
-        // Draw grid lines
-        ctx.strokeStyle = "#6b4f34"; // Brownish lines
-        ctx.lineWidth = 1;
+        ctx.fillStyle = "#fdf6e3"; ctx.fillRect(0, 0, internalCanvasSize, internalCanvasSize);
+        ctx.strokeStyle = "#6b4f34"; ctx.lineWidth = 1;
         for (let i = 0; i < boardSize; i++) {
             const pos = margin + i * cellSize;
-            // Vertical line
-            ctx.beginPath();
-            ctx.moveTo(pos, margin);
-            ctx.lineTo(pos, internalCanvasSize - margin);
-            ctx.stroke();
-            // Horizontal line
-            ctx.beginPath();
-            ctx.moveTo(margin, pos);
-            ctx.lineTo(internalCanvasSize - margin, pos);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(pos, margin); ctx.lineTo(pos, internalCanvasSize - margin); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(margin, pos); ctx.lineTo(internalCanvasSize - margin, pos); ctx.stroke();
         }
-
-        // Draw standard star points (optional, for aesthetics)
-        const starPoints = [
-            { i: 3, j: 3 }, { i: 11, j: 3 }, { i: 7, j: 7 },
-            { i: 3, j: 11 }, { i: 11, j: 11 }
-        ];
+        const starPoints = [ { i: 3, j: 3 }, { i: 11, j: 3 }, { i: 7, j: 7 }, { i: 3, j: 11 }, { i: 11, j: 11 } ];
         ctx.fillStyle = "#6b4f34";
         starPoints.forEach(p => {
-            const x = margin + p.i * cellSize;
-            const y = margin + p.j * cellSize;
-            ctx.beginPath();
-            ctx.arc(x, y, cellSize * 0.15, 0, 2 * Math.PI);
-            ctx.fill();
+            const x = margin + p.i * cellSize; const y = margin + p.j * cellSize;
+            ctx.beginPath(); ctx.arc(x, y, cellSize * 0.15, 0, 2 * Math.PI); ctx.fill();
         });
-
-
-        // Draw placed stones
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {
-                if (board[i][j] !== 0) {
-                    drawStone(i, j, board[i][j]);
-                }
+                if (board[i][j] !== 0) drawStone(i, j, board[i][j]);
             }
         }
-
-        // Draw pending move (ghost stone)
-        if (pendingMove !== null && !gameOver) {
-            drawGhostStone(pendingMove.i, pendingMove.j, playerPiece);
-        }
-
-        // Highlight AI's last move
-        if (lastComputerMove !== null) {
-            highlightComputerMove(lastComputerMove.i, lastComputerMove.j);
-        }
+        if (pendingMove !== null && !gameOver) drawGhostStone(pendingMove.i, pendingMove.j, playerPiece);
+        if (lastComputerMove !== null) highlightComputerMove(lastComputerMove.i, lastComputerMove.j);
     }
-
     function drawStone(i, j, type) {
-        const x = margin + i * cellSize;
-        const y = margin + j * cellSize;
-        const radius = cellSize / 2 * 0.85; // Slightly smaller radius for spacing
-
-        ctx.save(); // Save context state
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        ctx.closePath();
-
-        // Add subtle shadow
-        ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
-        ctx.shadowBlur = 5;
-        ctx.shadowOffsetX = 1;
-        ctx.shadowOffsetY = 2;
-
-        if (type === 1) { // Black stone
-            ctx.fillStyle = "#2c3e50"; // Dark blue-grey
-            ctx.fill();
-        } else { // White stone
-            ctx.fillStyle = "#ecf0f1"; // Light grey
-            ctx.fill();
-            // Add a thin border to white stones for contrast
-            ctx.strokeStyle = "#bdc3c7"; // Medium grey border
-            ctx.lineWidth = 1;
-            ctx.stroke();
-        }
-        ctx.restore(); // Restore context state (removes shadow for next drawings)
+        const x = margin + i * cellSize, y = margin + j * cellSize, radius = cellSize / 2 * 0.85;
+        ctx.save(); ctx.beginPath(); ctx.arc(x, y, radius, 0, 2 * Math.PI); ctx.closePath();
+        ctx.shadowColor = "rgba(0, 0, 0, 0.4)"; ctx.shadowBlur = 5; ctx.shadowOffsetX = 1; ctx.shadowOffsetY = 2;
+        if (type === 1) { ctx.fillStyle = "#2c3e50"; ctx.fill(); }
+        else { ctx.fillStyle = "#ecf0f1"; ctx.fill(); ctx.strokeStyle = "#bdc3c7"; ctx.lineWidth = 1; ctx.stroke(); }
+        ctx.restore();
     }
-
     function drawGhostStone(i, j, type) {
-        const x = margin + i * cellSize;
-        const y = margin + j * cellSize;
-        const radius = cellSize / 2 * 0.85;
-
-        ctx.save();
-        ctx.globalAlpha = 0.5; // Make it semi-transparent
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        ctx.closePath();
-
-        if (type === 1) {
-            ctx.fillStyle = "#2c3e50";
-        } else {
-            ctx.fillStyle = "#ecf0f1";
-        }
-        ctx.fill();
-        ctx.restore();
+        const x = margin + i * cellSize, y = margin + j * cellSize, radius = cellSize / 2 * 0.85;
+        ctx.save(); ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(x, y, radius, 0, 2 * Math.PI); ctx.closePath();
+        if (type === 1) { ctx.fillStyle = "#2c3e50"; } else { ctx.fillStyle = "#ecf0f1"; }
+        ctx.fill(); ctx.restore();
     }
-
     function highlightComputerMove(i, j) {
-        const x = margin + i * cellSize;
-        const y = margin + j * cellSize;
-        const radius = cellSize / 2 * 0.85; // Match stone radius
-
-        ctx.save();
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 3; // Make highlight thicker
-        ctx.beginPath();
-        // Draw arc slightly larger than the stone
-        ctx.arc(x, y, radius + 3, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.restore();
+        const x = margin + i * cellSize, y = margin + j * cellSize, radius = cellSize / 2 * 0.85;
+        ctx.save(); ctx.strokeStyle = "red"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(x, y, radius + 3, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
     }
 
     // ===========================================
-    // Game Logic & Win Check (Unchanged checkWin)
+    // 胜负判断 (不变)
     // ===========================================
-
     function checkWin(x, y, piece) {
-        const directions = [
-            { dx: 1, dy: 0 },  // Horizontal
-            { dx: 0, dy: 1 },  // Vertical
-            { dx: 1, dy: 1 },  // Diagonal /
-            { dx: 1, dy: -1 }  // Diagonal \
-        ];
-
+        const directions = [ { dx: 1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }, { dx: 1, dy: -1 } ];
         for (const { dx, dy } of directions) {
-            let count = 1; // Count the piece just placed
-
-            // Check in the positive direction (dx, dy)
+            let count = 1;
             for (let k = 1; k < WIN_CONDITION; k++) {
-                const ni = x + k * dx;
-                const nj = y + k * dy;
-                if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize && board[ni][nj] === piece) {
-                    count++;
-                } else {
-                    break; // Stop if out of bounds or different piece
-                }
+                const ni = x + k * dx, nj = y + k * dy;
+                if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize && board[ni][nj] === piece) count++; else break;
             }
-
-            // Check in the negative direction (-dx, -dy)
             for (let k = 1; k < WIN_CONDITION; k++) {
-                const ni = x - k * dx;
-                const nj = y - k * dy;
-                if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize && board[ni][nj] === piece) {
-                    count++;
-                } else {
-                    break; // Stop if out of bounds or different piece
-                }
+                const ni = x - k * dx, nj = y - k * dy;
+                if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize && board[ni][nj] === piece) count++; else break;
             }
-
-            if (count >= WIN_CONDITION) {
-                return true; // Found a winning line
-            }
+            if (count >= WIN_CONDITION) return true;
         }
-        return false; // No winning line found for this move
+        return false;
     }
 
     // ===========================================
-    // AI Logic (Minimax with Alpha-Beta) - IMPROVED
+    // AI 逻辑 (Minimax + Alpha-Beta + 估价优化)
     // ===========================================
+    function cloneBoard(src) { return src.map(row => row.slice()); }
 
-     function cloneBoard(src) {
-        // Correct deep copy
-        return src.map(row => row.slice());
-    }
+    // --- 优化后的棋型评分 ---
+    const SCORES = {
+        FIVE: 10000000,      // 连五
+        LIVE_FOUR: 1000000,  // 活四
+        DEAD_FOUR: 50000,    // 冲四 / 死四
+        LIVE_THREE: 50000,   // 活三 (重要性等同死四)
+        DEAD_THREE: 1000,    // 死三
+        LIVE_TWO: 1000,      // 活二 (重要性等同死三)
+        DEAD_TWO: 100,       // 死二
+        LIVE_ONE: 10,        // 活一
+        DEAD_ONE: 1,         // 死一
 
-    // --- NEW: Enhanced Evaluation Function ---
-    // Based on pattern scoring inspired by the CSDN blog post
+        OPP_FIVE: -50000000,  // 对手连五 (必须防守)
+        OPP_LIVE_FOUR: -5000000, // 对手活四 (必须防守)
+        OPP_DEAD_FOUR: -100000, // 对手冲四/死四
+        OPP_LIVE_THREE: -100000,// 对手活三 (威胁大)
+        OPP_DEAD_THREE: -2000,  // 对手死三
+        OPP_LIVE_TWO: -2000,    // 对手活二
+        OPP_DEAD_TWO: -200,     // 对手死二
+        OPP_LIVE_ONE: -20,      // 对手活一
+        OPP_DEAD_ONE: -2,       // 对手死一
+    };
+
+    // 改进的估价函数
     function evaluateBoardState(boardState) {
-        const scores = {
-            // AI (Maximizer) scores - higher is better for AI
-            FIVE: 10000000,       // Five in a row
-            LIVE_FOUR: 100000,    // Unblocked four ****
-            DEAD_FOUR: 1000,      // One end blocked four ***
-            LIVE_THREE: 5000,     // Unblocked three **
-            DEAD_THREE: 50,       // One end blocked three *
-            LIVE_TWO: 10,         // Unblocked two
-            DEAD_TWO: 2,          // One end blocked two
-            LIVE_ONE: 1,          // Unblocked one
-            DEAD_ONE: 0,          // Blocked one (or less) - typically score 0
-
-            // Player (Minimizer) scores - more negative is better for AI (worse for player)
-            OPP_FIVE: -100000000, // Player five in a row (more urgent to block)
-            OPP_LIVE_FOUR: -500000, // Player live four (very urgent)
-            OPP_DEAD_FOUR: -2000,   // Player dead four
-            OPP_LIVE_THREE: -10000, // Player live three (urgent block)
-            OPP_DEAD_THREE: -100,   // Player dead three
-            OPP_LIVE_TWO: -20,
-            OPP_DEAD_TWO: -4,
-            OPP_LIVE_ONE: -1,
-            OPP_DEAD_ONE: 0
-        };
-
         let totalScore = 0;
-        const directions = [{dx:1, dy:0}, {dx:0, dy:1}, {dx:1, dy:1}, {dx:1, dy:-1}];
-        // Use a Set to avoid recounting the same line segment in different directions/starts
-        const visited = new Set(); // Store keys like "i,j,dx,dy"
+        const directions = [ {dx:1, dy:0}, {dx:0, dy:1}, {dx:1, dy:1}, {dx:1, dy:-1} ]; // H, V, D/, D\
+        const evaluatedLines = new Set(); // 存储已评估线的标识，避免重复计算
 
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {
-                 // No need to evaluate from empty spots
-                 if (boardState[i][j] === 0) continue;
+                if (boardState[i][j] === 0) continue; // 只从有棋子的点开始评估线
 
                 for (const { dx, dy } of directions) {
-                    const key = `${i},${j},${dx},${dy}`;
-                    const reverseKey = `${i+4*dx},${j+4*dy},${-dx},${-dy}`; // Key for the end point in reverse dir
+                    const lineKey = `${i},${j},${dx},${dy}`;
+                    // 检查正向和反向是否已计算过
+                    const reverseKey = `${i + (WIN_CONDITION - 1) * dx},${j + (WIN_CONDITION - 1) * dy},${-dx},${-dy}`;
 
-                    // If this starting point and direction OR the reverse has been visited, skip
-                    if (visited.has(key) || visited.has(reverseKey)) continue;
-
-                    let line = []; // Stores the 5 pieces/empty spots in the line
-                    let validLine = true;
-                    for (let k = 0; k < 5; k++) {
-                        const ni = i + k * dx;
-                        const nj = j + k * dy;
-                        if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize) {
-                            line.push(boardState[ni][nj]);
-                        } else {
-                            validLine = false; // Line goes off board
-                            break;
-                        }
+                    if (evaluatedLines.has(lineKey) || evaluatedLines.has(reverseKey)) {
+                        continue;
                     }
 
-                    if (validLine) {
-                        const score = evaluateLine(line, scores);
-                        totalScore += score;
-                        // Mark this line segment as visited (only the start point and direction)
-                        visited.add(key);
-                    }
+                    totalScore += scoreLine(boardState, i, j, dx, dy, aiPiece, playerPiece);
+                    evaluatedLines.add(lineKey); // 标记此线已评估
                 }
             }
         }
         return totalScore;
     }
 
-    // Helper function to evaluate a single line of 5 spots
-    function evaluateLine(line, scoresConfig) {
-        let aiCount = 0;
-        let playerCount = 0;
-        let emptyCount = 0;
+    // 评估单条线 (5个位置)
+    function scoreLine(boardState, r, c, dr, dc, myPiece, oppPiece) {
+        let myCount = 0;
+        let oppCount = 0;
+        let linePieces = []; // 存储这条线上的棋子 (0, 1, or 2)
 
-        for (const piece of line) {
-            if (piece === aiPiece) aiCount++;
-            else if (piece === playerPiece) playerCount++;
-            else emptyCount++;
+        // 获取这条线上的5个棋子
+        for (let k = 0; k < WIN_CONDITION; k++) {
+            const nr = r + k * dr;
+            const nc = c + k * dc;
+            if (nr < 0 || nr >= boardSize || nc < 0 || nc >= boardSize) {
+                return 0; // 线出界，无法成五
+            }
+            const piece = boardState[nr][nc];
+            linePieces.push(piece);
+            if (piece === myPiece) myCount++;
+            else if (piece === oppPiece) oppCount++;
         }
 
-        // --- Rule 1: Mixed pieces - Line is useless ---
-        if (aiCount > 0 && playerCount > 0) {
+        // 如果线上同时有双方棋子，则此线无法成五，分数为0
+        if (myCount > 0 && oppCount > 0) {
             return 0;
         }
 
-        // --- Rule 2: AI patterns ---
-        if (aiCount > 0) {
-            switch (aiCount) {
-                case 5: return scoresConfig.FIVE;
-                case 4:
-                    // Check if the empty spot makes it live (0XXXX or XXXX0)
-                    if (line[0] === 0 || line[4] === 0) return scoresConfig.LIVE_FOUR;
-                    else return scoresConfig.DEAD_FOUR; // Should be rare if only 1 empty, maybe XX0XX? Evaluate as dead.
-                case 3:
-                     // Check for live three (0XXX0)
-                    if (line[0] === 0 && line[4] === 0) return scoresConfig.LIVE_THREE;
-                    // Check for dead three (e.g., WXXX0, 0XXXW, X0XXX, XX0XX) - Needs more refined open end check
-                    // Simplified: If not live three, consider it dead three
-                    if(line[0] === 0 || line[4] === 0) return scoresConfig.DEAD_THREE; // At least one end open
-                    else return scoresConfig.DEAD_THREE / 2; // Both ends blocked is less valuable than dead three
-                case 2:
-                    // Check for live two (00XX0, 0XX00) - simplified
-                    if (line[0] === 0 && line[4] === 0 && (line[1] === 0 || line[3] === 0)) return scoresConfig.LIVE_TWO;
-                    if ((line[0] === 0 && line[3] === 0) || (line[1] === 0 && line[4] === 0)) return scoresConfig.LIVE_TWO; // 0XX0X or X0XX0 patterns
-                    // Simplified: If at least one end open
-                    if(line[0] === 0 || line[4] === 0) return scoresConfig.DEAD_TWO;
-                    else return scoresConfig.DEAD_TWO / 2;
-                case 1:
-                     if (line[0] === 0 && line[4] === 0) return scoresConfig.LIVE_ONE; // 0X000 or 00X00 etc.
-                     if(line[0] === 0 || line[4] === 0) return scoresConfig.DEAD_ONE; // Actually might be 0 for dead one
-                     else return 0; // Blocked one
-                default: return 0;
-            }
+        // 获取线两端的棋子状态 (用于判断活/死)
+        const prev_r = r - dr;
+        const prev_c = c - dc;
+        const prevPiece = (prev_r >= 0 && prev_r < boardSize && prev_c >= 0 && prev_c < boardSize) ? boardState[prev_r][prev_c] : -1; // -1表示边界外
+
+        const next_r = r + WIN_CONDITION * dr;
+        const next_c = c + WIN_CONDITION * dc;
+        const nextPiece = (next_r >= 0 && next_r < boardSize && next_c >= 0 && next_c < boardSize) ? boardState[next_r][next_c] : -1; // -1表示边界外
+
+        // 根据我方或对方棋子数量评分
+        if (myCount > 0) {
+            return getPatternScore(myCount, prevPiece === 0, nextPiece === 0, false);
+        } else if (oppCount > 0) {
+            return getPatternScore(oppCount, prevPiece === 0, nextPiece === 0, true);
         }
 
-        // --- Rule 3: Player patterns (negative scores) ---
-        if (playerCount > 0) {
-             switch (playerCount) {
-                case 5: return scoresConfig.OPP_FIVE;
-                case 4:
-                    if (line[0] === 0 || line[4] === 0) return scoresConfig.OPP_LIVE_FOUR;
-                    else return scoresConfig.OPP_DEAD_FOUR;
-                case 3:
-                    if (line[0] === 0 && line[4] === 0) {
-                        // Special case from blog: 0WWW0 -> higher threat
-                        if(line[1] === playerPiece && line[2] === playerPiece && line[3] === playerPiece) return scoresConfig.OPP_LIVE_THREE * 2; // Boost score for central live three
-                        return scoresConfig.OPP_LIVE_THREE;
-                    }
-                    if(line[0] === 0 || line[4] === 0) return scoresConfig.OPP_DEAD_THREE;
-                     else return scoresConfig.OPP_DEAD_THREE / 2;
-                case 2:
-                     if (line[0] === 0 && line[4] === 0 && (line[1] === 0 || line[3] === 0)) return scoresConfig.OPP_LIVE_TWO;
-                     if ((line[0] === 0 && line[3] === 0) || (line[1] === 0 && line[4] === 0)) return scoresConfig.OPP_LIVE_TWO;
-                     if(line[0] === 0 || line[4] === 0) return scoresConfig.OPP_DEAD_TWO;
-                     else return scoresConfig.OPP_DEAD_TWO / 2;
-                case 1:
-                     if (line[0] === 0 && line[4] === 0) return scoresConfig.OPP_LIVE_ONE;
-                     if(line[0] === 0 || line[4] === 0) return scoresConfig.OPP_DEAD_ONE;
-                     else return 0;
-                default: return 0;
-            }
-        }
-
-        return 0; // Line contains only empty spots
+        return 0; // 全空线
     }
 
+    // 根据棋子数量和两端开放情况获取分数
+    function getPatternScore(count, isOpenPrev, isOpenNext, isOpponent) {
+        const scoreMap = isOpponent ? { // 对手棋型
+            FIVE: SCORES.OPP_FIVE, LIVE_FOUR: SCORES.OPP_LIVE_FOUR, DEAD_FOUR: SCORES.OPP_DEAD_FOUR,
+            LIVE_THREE: SCORES.OPP_LIVE_THREE, DEAD_THREE: SCORES.OPP_DEAD_THREE,
+            LIVE_TWO: SCORES.OPP_LIVE_TWO, DEAD_TWO: SCORES.OPP_DEAD_TWO,
+            LIVE_ONE: SCORES.OPP_LIVE_ONE, DEAD_ONE: SCORES.OPP_DEAD_ONE
+        } : { // 我方棋型
+            FIVE: SCORES.FIVE, LIVE_FOUR: SCORES.LIVE_FOUR, DEAD_FOUR: SCORES.DEAD_FOUR,
+            LIVE_THREE: SCORES.LIVE_THREE, DEAD_THREE: SCORES.DEAD_THREE,
+            LIVE_TWO: SCORES.LIVE_TWO, DEAD_TWO: SCORES.DEAD_TWO,
+            LIVE_ONE: SCORES.LIVE_ONE, DEAD_ONE: SCORES.DEAD_ONE
+        };
 
-    // --- NEW: Generate candidate moves with positional bonus ---
-    function getCandidateMoves(boardState, radius = 1) { // Reduced default radius to 1 for potentially faster pruning
-        let candidates = new Map();
+        if (count === 5) return scoreMap.FIVE;
+        if (count === 4) {
+            if (isOpenPrev && isOpenNext) return scoreMap.LIVE_FOUR; // 两端皆空 -> 活四
+            if (isOpenPrev || isOpenNext) return scoreMap.DEAD_FOUR; // 一端空 -> 冲四/死四
+            // (两端被堵死的情况在此5格模型下不会出现count=4)
+        }
+        if (count === 3) {
+            if (isOpenPrev && isOpenNext) return scoreMap.LIVE_THREE; // 两端皆空 -> 活三
+            if (isOpenPrev || isOpenNext) return scoreMap.DEAD_THREE; // 一端空 -> 死三
+        }
+        if (count === 2) {
+            if (isOpenPrev && isOpenNext) return scoreMap.LIVE_TWO;   // 两端皆空 -> 活二
+            if (isOpenPrev || isOpenNext) return scoreMap.DEAD_TWO;   // 一端空 -> 死二
+        }
+        if (count === 1) {
+            if (isOpenPrev && isOpenNext) return scoreMap.LIVE_ONE;   // 两端皆空 -> 活一
+            if (isOpenPrev || isOpenNext) return scoreMap.DEAD_ONE;   // 一端空 -> 死一
+        }
+
+        return 0; // 其他情况 (如两端被堵死的三/二/一) 价值较低，暂不给分
+    }
+
+    // --- 生成候选走法 ---
+    function getCandidateMoves(boardState) {
+        let candidates = new Map(); // 使用Map避免重复: {"i,j": {i, j, bonus}}
         let hasStones = false;
         const center = Math.floor(boardSize / 2);
 
@@ -656,9 +476,9 @@
             for (let j = 0; j < boardSize; j++) {
                 if (boardState[i][j] !== 0) {
                     hasStones = true;
-                    // Look around this stone
-                    for (let di = -radius; di <= radius; di++) {
-                        for (let dj = -radius; dj <= radius; dj++) {
+                    // 在现有棋子周围半径内搜索空位
+                    for (let di = -CANDIDATE_RADIUS; di <= CANDIDATE_RADIUS; di++) {
+                        for (let dj = -CANDIDATE_RADIUS; dj <= CANDIDATE_RADIUS; dj++) {
                             if (di === 0 && dj === 0) continue;
                             const ni = i + di;
                             const nj = j + dj;
@@ -666,10 +486,10 @@
                             if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize && boardState[ni][nj] === 0) {
                                 const key = `${ni},${nj}`;
                                 if (!candidates.has(key)) {
-                                    // Add positional bonus (closer to center is slightly better)
-                                    const dist = Math.abs(ni - center) + Math.abs(nj - center);
-                                    const bonus = Math.max(0, (center - dist)) * 0.1; // Simple bonus, max at center
-                                    candidates.set(key, { i: ni, j: nj, bonus: bonus });
+                                    // 简单位置奖励 (离中心近加分)
+                                    const dist = Math.max(Math.abs(ni - center), Math.abs(nj - center));
+                                    const bonus = (center - dist) * 0.5; // 调整奖励幅度
+                                    candidates.set(key, { i: ni, j: nj, bonus: Math.max(0, bonus) });
                                 }
                             }
                         }
@@ -678,93 +498,89 @@
             }
         }
 
-        // If board is empty, suggest the center
+        // 开局时下中间
         if (!hasStones) {
-            candidates.set(`${center},${center}`, { i: center, j: center, bonus: center * 0.1 });
+            candidates.set(`${center},${center}`, { i: center, j: center, bonus: center });
         }
-
-        // If radius search failed but board isn't empty (rare, but possible if stones are isolated)
-        // Use a larger radius or search all empty spots as fallback
-         if (candidates.size === 0 && hasStones) {
-             for (let i = 0; i < boardSize; i++) {
-                for (let j = 0; j < boardSize; j++) {
-                    if(boardState[i][j] === 0) {
-                         const key = `${i},${j}`;
-                         if (!candidates.has(key)) { // Avoid adding if already found by chance
-                             const dist = Math.abs(i - center) + Math.abs(j - center);
-                             const bonus = Math.max(0, (center - dist)) * 0.1;
-                             candidates.set(key, { i: i, j: j, bonus: bonus });
-                         }
-                    }
-                }
-             }
-         }
-
+        // 如果半径内没找到(棋子分散), 则搜索所有空位 (低效但保证有棋可下)
+        else if (candidates.size === 0 && hasStones) {
+            console.warn("候选半径内无走法, 搜索所有空位");
+            for (let i = 0; i < boardSize; i++) {
+               for (let j = 0; j < boardSize; j++) {
+                   if(boardState[i][j] === 0) {
+                        const key = `${i},${j}`;
+                        const dist = Math.max(Math.abs(i - center), Math.abs(j - center));
+                        const bonus = (center - dist) * 0.5;
+                        candidates.set(key, { i: i, j: j, bonus: Math.max(0, bonus) });
+                   }
+               }
+            }
+        }
         return Array.from(candidates.values());
     }
 
-    // --- NEW: Minimax with Move Ordering ---
+    // --- Minimax + Alpha-Beta 搜索 ---
     function minimax(boardState, depth, alpha, beta, maximizingPlayer) {
-        // Use the new evaluation function
-        let evalScore = evaluateBoardState(boardState);
+        let evalScore = evaluateBoardState(boardState); // 评估当前局面
 
-        // Check for terminal state (win/loss detected by evaluation)
-        // Use large absolute values to signify terminal states
-        if (Math.abs(evalScore) >= scores.FIVE) {
-            // Adjust score by depth: faster wins/losses are better
-             return maximizingPlayer ? evalScore - depth : evalScore + depth; // Correct adjustment
+        // 检查是否达到终止状态 (胜负或深度)
+        // 使用较大的分数阈值判断胜负
+        if (Math.abs(evalScore) >= SCORES.LIVE_FOUR) { // 活四或连五意味着接近或已终止
+             // 调整分数使AI倾向于更快赢棋，更晚输棋
+             return evalScore + (maximizingPlayer ? -depth : depth) * 100;
         }
-        // Check for max depth or draw
-        if (depth === 0 || checkDraw()) {
+        if (depth === 0) { // 达到最大搜索深度
             return evalScore;
         }
 
         let candidates = getCandidateMoves(boardState);
+        if (candidates.length === 0) { // 没有可走的位置，平局
+            return 0;
+        }
 
-        // --- Move Ordering ---
+        // --- 走法排序 ---
         candidates.forEach(move => {
             boardState[move.i][move.j] = maximizingPlayer ? aiPiece : playerPiece;
-            // Score includes board evaluation + positional bonus
-            move.heuristicScore = evaluateBoardState(boardState) + (move.bonus || 0);
-            boardState[move.i][move.j] = 0; // Undo move
+            move.heuristicScore = evaluateBoardState(boardState) + (move.bonus || 0); // 启发式评估
+            boardState[move.i][move.j] = 0; // 撤销走法
         });
+        candidates.sort((a, b) => { // 排序: Max层优先高分, Min层优先低分
+            return maximizingPlayer ? (b.heuristicScore - a.heuristicScore) : (a.heuristicScore - b.heuristicScore);
+        });
+        // ---------------
 
-        // Sort based on the heuristic score
-        candidates.sort((a, b) => maximizingPlayer ? b.heuristicScore - a.heuristicScore : a.heuristicScore - b.heuristicScore);
-        // --------------------
-
-        if (maximizingPlayer) { // AI's turn (Maximizer)
+        if (maximizingPlayer) { // AI回合 (最大化)
             let maxEval = -Infinity;
             for (const move of candidates) {
                 boardState[move.i][move.j] = aiPiece;
-                let currentEval = minimax(boardState, depth - 1, alpha, beta, false);
-                boardState[move.i][move.j] = 0;
+                let currentEval = minimax(cloneBoard(boardState), depth - 1, alpha, beta, false); // 递归搜索 (传递副本)
+                boardState[move.i][move.j] = 0; // 撤销
 
                 maxEval = Math.max(maxEval, currentEval);
                 alpha = Math.max(alpha, currentEval);
                 if (beta <= alpha) {
-                    break; // Beta cutoff
+                    break; // Beta 剪枝
                 }
             }
             return maxEval;
-        } else { // Player's turn simulation (Minimizer)
+        } else { // 玩家回合模拟 (最小化)
             let minEval = Infinity;
             for (const move of candidates) {
                 boardState[move.i][move.j] = playerPiece;
-                let currentEval = minimax(boardState, depth - 1, alpha, beta, true);
-                boardState[move.i][move.j] = 0;
+                let currentEval = minimax(cloneBoard(boardState), depth - 1, alpha, beta, true); // 递归搜索 (传递副本)
+                boardState[move.i][move.j] = 0; // 撤销
 
                 minEval = Math.min(minEval, currentEval);
                 beta = Math.min(beta, currentEval);
                 if (beta <= alpha) {
-                    break; // Alpha cutoff
+                    break; // Alpha 剪枝
                 }
             }
             return minEval;
         }
     }
 
-    // --- NEW: Get Best Move using new Minimax and Move Ordering ---
+    // --- 获取最佳走法 ---
     function getBestMove(boardState, searchDepth) {
         let bestMove = null;
         let bestValue = -Infinity;
@@ -772,201 +588,155 @@
         let beta = Infinity;
 
         let candidates = getCandidateMoves(boardState);
+        if (candidates.length === 0) { console.error("AI: 无候选走法!"); return null; }
 
-         // --- Move Ordering at the Root ---
+        // --- 根节点走法排序 ---
         candidates.forEach(move => {
             boardState[move.i][move.j] = aiPiece;
             move.heuristicScore = evaluateBoardState(boardState) + (move.bonus || 0);
             boardState[move.i][move.j] = 0;
         });
-        candidates.sort((a, b) => b.heuristicScore - a.heuristicScore); // Sort for AI (maximizing)
-        // --------------------------------
+        candidates.sort((a, b) => b.heuristicScore - a.heuristicScore); // AI总是最大化，优先高分
+        // ----------------------
+
+        console.log(`AI 正在考虑 ${candidates.length} 个顶层走法 (深度 ${searchDepth})`);
 
         for (const move of candidates) {
             boardState[move.i][move.j] = aiPiece;
-            // Initial call to minimax for this move (next level is opponent minimizing)
-            let moveValue = minimax(boardState, searchDepth - 1, alpha, beta, false);
-            boardState[move.i][move.j] = 0; // Undo move
+            // 初始调用minimax (下一层是对手的回合，最小化)
+            let moveValue = minimax(cloneBoard(boardState), searchDepth - 1, alpha, beta, false);
+            boardState[move.i][move.j] = 0; // 撤销
 
-            // Debugging log (optional)
-            // console.log(`Root Move (${move.i}, ${move.j}) evaluated to: ${moveValue}, Heuristic: ${move.heuristicScore}`);
+            // console.log(` -> 走法 (${move.i}, ${move.j}) 评估分: ${moveValue.toFixed(0)} (启发分: ${move.heuristicScore.toFixed(0)})`);
 
             if (moveValue > bestValue) {
                 bestValue = moveValue;
-                bestMove = { i: move.i, j: move.j }; // Store only coordinates needed
+                bestMove = { i: move.i, j: move.j };
             }
-            // Update alpha at the root level as well
-            alpha = Math.max(alpha, moveValue);
-             // No beta cutoff needed at the root level decision finding loop itself.
+            alpha = Math.max(alpha, moveValue); // 更新alpha值
+            // 根节点的循环不需要beta剪枝, 因为我们要找到全局最优解
         }
 
-        // Fallback if no move found (shouldn't happen often with improved logic)
+        // Fallback 处理
         if (!bestMove && candidates.length > 0) {
-             console.warn("No best move determined logically, picking highest heuristic candidate.");
-             bestMove = { i: candidates[0].i, j: candidates[0].j }; // Pick the best heuristic move
+             console.warn("AI: 未找到最佳逻辑走法, 选择启发分最高的.");
+             bestMove = { i: candidates[0].i, j: candidates[0].j };
         } else if (!bestMove) {
-             console.error("AI cannot find ANY valid move! Board likely full or error.");
-             // Find any empty spot as a last resort
+             console.error("AI 无法找到任何有效走法! (棋盘已满或错误)");
+             // 最后的尝试: 找第一个空格
              for (let i = 0; i < boardSize; i++) for (let j = 0; j < boardSize; j++) if(boardState[i][j] === 0) return {i, j};
-             return null; // Truly no moves left
+             return null;
         }
 
-        // console.log(`AI chose move (${bestMove.i}, ${bestMove.j}) with score ${bestValue}`);
+        console.log(`AI 选择: (${bestMove.i}, ${bestMove.j}), 评估分: ${bestValue.toFixed(0)}`);
         return bestMove;
     }
 
-    // Wrapper for AI move to handle state and timing (Unchanged)
+    // --- AI 执行走法包装器 ---
     function computerMoveWrapper() {
-         if (gameOver || turn !== "computer") return; // Extra safety check
+        if (gameOver || turn !== "computer") return;
 
         isAiComputing = true;
         gameMessage.innerText = "电脑正在思考... 🤔";
-        pendingMove = null; // Clear player's pending move visually when AI starts thinking
-        drawBoard(); // Update board to show message and clear pending move
+        pendingMove = null; drawBoard(); // 清除待定并刷新UI
 
-        // Use setTimeout to allow UI update before potentially blocking computation
         setTimeout(() => {
-            const currentBoardState = cloneBoard(board); // Use a copy for AI calculation
-            const bestMove = getBestMove(currentBoardState, MAX_DEPTH); // Uses the improved AI logic
-
-            // --- Critical Check: Ensure game hasn't ended or turn changed while AI was thinking ---
+            // 再次检查游戏状态，防止AI计算期间游戏结束
             if (gameOver || turn !== "computer") {
-                isAiComputing = false;
-                console.log("AI calculation aborted, game state changed.");
-                return;
+                isAiComputing = false; console.log("AI 计算中止，游戏状态已改变。"); return;
             }
 
-            if (bestMove && board[bestMove.i][bestMove.j] === 0) { // Double-check spot is still empty
-                // --- Make the AI Move ---
-                board[bestMove.i][bestMove.j] = aiPiece;
-                lastComputerMove = { i: bestMove.i, j: bestMove.j }; // Record for highlighting
-                drawBoard(); // Draw the AI's move immediately
+            const startTime = performance.now(); // 记录开始时间
+            const bestMove = getBestMove(cloneBoard(board), MAX_DEPTH); // 获取最佳走法 (传递副本)
+            const endTime = performance.now();   // 记录结束时间
+            console.log(`AI 计算耗时: ${(endTime - startTime).toFixed(2)} ms`);
 
-                // --- Check Game Status After AI Move ---
-                if (checkWin(bestMove.i, bestMove.j, aiPiece)) {
-                    endGame(aiPiece); // AI wins
-                } else if (checkDraw()) {
-                    endGame(0); // Draw
-                } else {
-                    // --- Game Continues: Switch to Player's Turn ---
+            // 再次检查游戏状态
+             if (gameOver || turn !== "computer") {
+                isAiComputing = false; console.log("AI 计算后中止，游戏状态已改变。"); return;
+            }
+
+            // 执行走法
+            if (bestMove && board[bestMove.i][bestMove.j] === 0) {
+                board[bestMove.i][bestMove.j] = aiPiece;
+                lastComputerMove = { i: bestMove.i, j: bestMove.j };
+                drawBoard();
+
+                if (checkWin(bestMove.i, bestMove.j, aiPiece)) endGame(aiPiece);
+                else if (checkDraw()) endGame(0);
+                else {
                     turn = "player";
                     gameMessage.innerText = "轮到你了，请落子。";
-                    isAiComputing = false; // Allow player input again
+                    isAiComputing = false;
                 }
             } else {
-                 // --- Handle AI Error / No Move Found ---
-                 console.error("AI selected an invalid move, no move found, or spot taken.", bestMove);
-                 // Attempt a simple fallback: find the first available empty spot
+                 console.error("AI 错误: 选择无效走法、无走法或位置已被占用.", bestMove);
+                 gameMessage.innerText = "AI 错误，尝试备用...";
+                 // Fallback: 找第一个空格
                  let foundFallback = false;
-                 for (let i = 0; i < boardSize; i++){
-                     for (let j = 0; j < boardSize; j++){
+                 for (let i = 0; i < boardSize && !gameOver; i++){
+                     for (let j = 0; j < boardSize && !gameOver; j++){
                          if(board[i][j] === 0){
-                             console.warn(`AI Error: Fallback move to (${i}, ${j})`);
-                             board[i][j] = aiPiece;
-                             lastComputerMove = {i, j};
-                             drawBoard();
-                             if (checkWin(i, j, aiPiece)) { endGame(aiPiece); }
-                             else if (checkDraw()) { endGame(0); }
+                             console.warn(`AI 错误: 备用走法 (${i}, ${j})`);
+                             board[i][j] = aiPiece; lastComputerMove = {i, j}; drawBoard();
+                             if (checkWin(i, j, aiPiece)) endGame(aiPiece);
+                             else if (checkDraw()) endGame(0);
                              else { turn = "player"; gameMessage.innerText = "轮到你了，请落子。"; }
-                             foundFallback = true;
-                             break;
+                             foundFallback = true; break;
                          }
                      }
                       if(foundFallback) break;
                  }
-                 // If still no move found (board is completely full), declare draw
-                 if (!foundFallback && !gameOver) {
-                     console.warn("AI Fallback failed: No empty spots left.");
-                     endGame(0);
-                 }
-                 isAiComputing = false; // Ensure flag is reset even on error/fallback
+                 if (!foundFallback && !gameOver) { console.warn("AI 备用失败: 无空格."); endGame(0); }
+                 isAiComputing = false;
             }
-        }, 50); // Short delay (e.g., 50ms) allows UI redraw before potential freeze
+        }, 50); // 短暂延迟以允许UI更新
     }
 
-
     // ===========================================
-    // Event Listeners (Unchanged)
+    // 事件监听器 (逻辑不变)
     // ===========================================
-
     canvas.addEventListener('click', function(e) {
-        // --- Guard clauses: Check if interaction should be processed ---
-        if (gameOver || turn !== "player" || isAiComputing) {
-            return; // Ignore clicks if game over, not player's turn, or AI is busy
-        }
+        if (gameOver || turn !== "player" || isAiComputing) return;
 
-        // --- Calculate click position relative to canvas internal resolution ---
         const rect = canvas.getBoundingClientRect();
-        const scaleX = internalCanvasSize / rect.width;
-        const scaleY = internalCanvasSize / rect.height;
-        const canvasX = (e.clientX - rect.left) * scaleX;
-        const canvasY = (e.clientY - rect.top) * scaleY;
+        const scaleX = internalCanvasSize / rect.width; const scaleY = internalCanvasSize / rect.height;
+        const canvasX = (e.clientX - rect.left) * scaleX; const canvasY = (e.clientY - rect.top) * scaleY;
+        const i = Math.round((canvasX - margin) / cellSize); const j = Math.round((canvasY - margin) / cellSize);
 
-        // --- Convert canvas coordinates to board grid indices ---
-        const i = Math.round((canvasX - margin) / cellSize);
-        const j = Math.round((canvasY - margin) / cellSize);
-
-        // --- Validate the calculated grid position ---
         if (i < 0 || i >= boardSize || j < 0 || j >= boardSize || board[i][j] !== 0) {
-             pendingMove = null; // Cancel pending move if click is invalid
-             drawBoard(); // Redraw to remove potential ghost stone
-             return; // Ignore clicks outside grid or on occupied spots
+             pendingMove = null; drawBoard(); return;
         }
 
-        // --- Handle two-step move confirmation ---
-        if (pendingMove && pendingMove.i === i && pendingMove.j === j) {
-            // --- Confirm the move (Second click on the same spot) ---
-            board[i][j] = playerPiece;      // Place the player's piece
-            pendingMove = null;             // Clear the pending state
-            lastComputerMove = null;        // Clear AI highlight after player confirms move
-            drawBoard();                    // Redraw the board with the new piece
-
-            // --- Check game status after player's move ---
-            if (checkWin(i, j, playerPiece)) {
-                endGame(playerPiece);       // Player wins
-            } else if (checkDraw()) {
-                endGame(0);                 // Draw
-            } else {
-                // --- Game continues: Switch turn to computer ---
-                turn = "computer";
-                // Initiate AI move using the wrapper function
-                computerMoveWrapper();
-            }
-        } else {
-            // --- Set pending move (First click or click on a different empty spot) ---
-            pendingMove = { i, j };         // Store the potential move location
-            drawBoard();                    // Redraw to show the ghost stone
-            gameMessage.innerText = "再次点击确认落子，或点击其他位置更改。"; // Update user guidance
+        if (pendingMove && pendingMove.i === i && pendingMove.j === j) { // 确认落子
+            board[i][j] = playerPiece; pendingMove = null; lastComputerMove = null; drawBoard();
+            if (checkWin(i, j, playerPiece)) endGame(playerPiece);
+            else if (checkDraw()) endGame(0);
+            else { turn = "computer"; computerMoveWrapper(); } // 轮到AI
+        } else { // 预落子
+            pendingMove = { i, j }; drawBoard();
+            gameMessage.innerText = "再次点击确认落子，或点击其他位置更改。";
         }
     });
 
-    // Button listeners
     firstBtn.addEventListener('click', () => setupGame(true));
     secondBtn.addEventListener('click', () => setupGame(false));
     restartBtn.addEventListener('click', restartGame);
 
-    // Initial setup on page load
+    // ===========================================
+    // 游戏初始化
+    // ===========================================
     function initializeGame() {
-        canvas.width = internalCanvasSize;
-        canvas.height = internalCanvasSize;
-        // Define the scores object globally for the new evaluate function
-        window.scores = {
-            FIVE: 10000000, LIVE_FOUR: 100000, DEAD_FOUR: 1000,
-            LIVE_THREE: 5000, DEAD_THREE: 50, LIVE_TWO: 10, DEAD_TWO: 2, LIVE_ONE: 1, DEAD_ONE: 0,
-            OPP_FIVE: -100000000, OPP_LIVE_FOUR: -500000, OPP_DEAD_FOUR: -2000,
-            OPP_LIVE_THREE: -10000, OPP_DEAD_THREE: -100, OPP_LIVE_TWO: -20, OPP_DEAD_TWO: -4, OPP_LIVE_ONE: -1, OPP_DEAD_ONE: 0
-        };
-        restartGame(); // Start in the initial "choose side" state
+        canvas.width = internalCanvasSize; canvas.height = internalCanvasSize;
+        restartGame(); // 进入选择界面
     }
-
-    initializeGame(); // Run the initialization
+    initializeGame();
 
 })();
 </script>
 
-<p style="text-align: center; font-size: 14px; color: #666; margin-top: 20px;">
-  点击棋盘交点进行落子。第一次点击显示预落子效果，第二次点击确认落子。<br>电脑落子将使用与玩家不同的颜色，并以红色圆环标出其最后一步落子。
-</p>
+</body>
+</html>
 <div class="article-footer fs14"></div>
 </article>
 
