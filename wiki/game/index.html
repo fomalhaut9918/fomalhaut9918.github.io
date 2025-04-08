@@ -27,8 +27,8 @@
 <meta property="og:site_name" content="Fomalhaut &#39;s Blog">
 <meta property="og:description" content="欢迎来到五子棋游戏游戏开始前请先选择先手或后手（玩家选择先手则执黑，其余执白），游戏结束后支持重新开始游戏。另外，游戏支持两步确认落子：第一次点击显示预落子效果，第二次点击确认落子。电脑最后一次落子处以红色圆环标出，帮助直观查看电脑决策。    &#x2F;* 页面基础样式 *&#x2F;   body {     background: #f8f8f8; &#x2F;* Slightly softer background">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-04-08T13:22:44.948Z">
-<meta property="article:modified_time" content="2025-04-08T13:22:44.948Z">
+<meta property="article:published_time" content="2025-04-08T13:23:29.088Z">
+<meta property="article:modified_time" content="2025-04-08T13:23:29.088Z">
 <meta property="article:author" content="Fomalhaut">
 <meta property="article:tag" content="blog">
 <meta name="twitter:card" content="summary">
@@ -86,7 +86,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/game/index.html">Game</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-04-08T13:22:44.948Z">2025-04-08</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-04-08T13:23:29.088Z">2025-04-08</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -209,8 +209,7 @@
     const boardSize = 15;       // Standard 15x15 board
     const internalCanvasSize = 640; // High internal resolution
     const margin = 30;          // Increased margin for better edge spacing
-    // --- INCREASED DEPTH for stronger AI --- (Adjust based on performance)
-    const MAX_DEPTH = 4; // Increased depth slightly
+    const MAX_DEPTH = 3;        // AI search depth (adjust for performance)
     const WIN_CONDITION = 5;    // 5 in a row to win
 
     // --- DOM Elements ---
@@ -236,67 +235,262 @@
     // Calculate cell size based on internal resolution and margin
     const cellSize = (internalCanvasSize - 2 * margin) / (boardSize - 1);
 
-    // --- Pattern Scores --- (Global or passed around)
-    // Values can be tuned further based on testing
-    const scores = {
-        // AI Scores (Positive)
-        FIVE: 100000000,      // AI Win
-        LIVE_FOUR: 1000000,   // AI Live Four (Threat)
-        DEAD_FOUR: 50000,     // AI Dead Four
-        LIVE_THREE: 50000,    // AI Live Three (Increased value)
-        DEAD_THREE: 1000,     // AI Dead Three
-        LIVE_TWO: 500,        // AI Live Two
-        DEAD_TWO: 10,         // AI Dead Two
-        LIVE_ONE: 5,          // AI Live One
-        DEAD_ONE: 1,          // AI Dead One
+    // ===========================================
+    // Initialization and Game Control Functions
+    // ===========================================
 
-        // Player Scores (Negative, higher absolute value means more urgent for AI to block)
-        OPP_FIVE: -1000000000, // Player Win (Highest priority to block if somehow possible)
-        OPP_LIVE_FOUR: -5000000,// Player Live Four (VERY URGENT)
-        OPP_DEAD_FOUR: -100000, // Player Dead Four
-        OPP_LIVE_THREE: -100000,// Player Live Three (URGENT) - Increased urgency
-        OPP_DEAD_THREE: -5000,  // Player Dead Three
-        OPP_LIVE_TWO: -1000,    // Player Live Two
-        OPP_DEAD_TWO: -50,      // Player Dead Two
-        OPP_LIVE_ONE: -10,      // Player Live One
-        OPP_DEAD_ONE: -1        // Player Dead One
-    };
+    function initBoard() {
+        board = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
+        lastComputerMove = null;
+        pendingMove = null;
+    }
 
-    // Priority levels for move ordering
-    const PRIORITIES = {
-        AI_WIN: 10,         // AI can win in one move
-        BLOCK_OPP_WIN: 9,   // Block opponent win (must do)
-        AI_LIVE_FOUR: 8,    // Create AI live four
-        BLOCK_OPP_LIVE_FOUR: 7, // Block opponent live four
-        BLOCK_OPP_DEAD_FOUR_LIVE_THREE: 6, // Block opponent combo
-        AI_LIVE_THREE: 5,   // Create AI live three
-        BLOCK_OPP_LIVE_THREE: 4,// Block opponent live three
-        NORMAL: 1,          // Regular move based on evaluation
-        LOW: 0              // Low priority
-    };
+    function setupGame(playerStarts) {
+        playerIsBlack = playerStarts;
+        if (playerIsBlack) {
+            playerPiece = 1; // Black
+            aiPiece = 2;     // White
+            turn = "player";
+            gameMessage.innerText = "游戏开始，请您落子 (黑棋)";
+        } else {
+            playerPiece = 2; // White
+            aiPiece = 1;     // Black
+            turn = "computer";
+            gameMessage.innerText = "游戏开始，电脑先手 (黑棋)";
+        }
+        gameOver = false;
+        isAiComputing = false;
+        initBoard();
+        drawBoard();
 
+        // Disable selection buttons, show restart button
+        firstBtn.disabled = true;
+        secondBtn.disabled = true;
+        restartBtn.style.display = "inline-block";
+
+        // If computer starts, initiate its move
+        if (turn === "computer") {
+            // Add a slight delay for the user to see the initial board
+             setTimeout(computerMoveWrapper, 500);
+        }
+    }
+
+    function restartGame() {
+        gameOver = true;
+        turn = "";
+        isAiComputing = false; // Reset computing flag
+        gameMessage.innerText = "请选择是否先手：";
+        firstBtn.disabled = false;
+        secondBtn.disabled = false;
+        restartBtn.style.display = "none";
+        initBoard(); // Clear board data
+        drawBoard(); // Redraw empty board
+    }
+
+    function endGame(winnerPiece) {
+        gameOver = true;
+        isAiComputing = false; // Ensure AI stops if it was thinking
+        let winnerText = "";
+        if (winnerPiece === playerPiece) {
+            winnerText = "恭喜你，你赢了！🎉";
+        } else if (winnerPiece === aiPiece) {
+            winnerText = "很遗憾，你输了。🤖";
+        } else {
+             winnerText = "平局！"; // Should be rare in Gomoku
+        }
+        gameMessage.innerText = "游戏结束 - " + winnerText;
+        restartBtn.style.display = "inline-block"; // Ensure restart is visible
+        pendingMove = null; // Clear any pending move visually
+        drawBoard(); // Redraw to remove pending move ghost
+    }
+
+     // Check if the board is full (draw condition)
+    function checkDraw() {
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if (board[i][j] === 0) {
+                    return false; // Found an empty spot
+                }
+            }
+        }
+        return true; // No empty spots left
+    }
 
     // ===========================================
-    // Initialization and Game Control Functions (Unchanged)
+    // Drawing Functions (Unchanged from previous version)
     // ===========================================
-    function initBoard() { /* ... unchanged ... */ }
-    function setupGame(playerStarts) { /* ... unchanged ... */ }
-    function restartGame() { /* ... unchanged ... */ }
-    function endGame(winnerPiece) { /* ... unchanged ... */ }
-    function checkDraw() { /* ... unchanged ... */ }
-    // ===========================================
-    // Drawing Functions (Unchanged)
-    // ===========================================
-    function drawBoard() { /* ... unchanged ... */ }
-    function drawStone(i, j, type) { /* ... unchanged ... */ }
-    function drawGhostStone(i, j, type) { /* ... unchanged ... */ }
-    function highlightComputerMove(i, j) { /* ... unchanged ... */ }
+
+    function drawBoard() {
+        // Clear canvas
+        ctx.clearRect(0, 0, internalCanvasSize, internalCanvasSize);
+
+        // Draw background
+        ctx.fillStyle = "#fdf6e3"; // Light beige background
+        ctx.fillRect(0, 0, internalCanvasSize, internalCanvasSize);
+
+        // Draw grid lines
+        ctx.strokeStyle = "#6b4f34"; // Brownish lines
+        ctx.lineWidth = 1;
+        for (let i = 0; i < boardSize; i++) {
+            const pos = margin + i * cellSize;
+            // Vertical line
+            ctx.beginPath();
+            ctx.moveTo(pos, margin);
+            ctx.lineTo(pos, internalCanvasSize - margin);
+            ctx.stroke();
+            // Horizontal line
+            ctx.beginPath();
+            ctx.moveTo(margin, pos);
+            ctx.lineTo(internalCanvasSize - margin, pos);
+            ctx.stroke();
+        }
+
+        // Draw standard star points (optional, for aesthetics)
+        const starPoints = [
+            { i: 3, j: 3 }, { i: 11, j: 3 }, { i: 7, j: 7 },
+            { i: 3, j: 11 }, { i: 11, j: 11 }
+        ];
+        ctx.fillStyle = "#6b4f34";
+        starPoints.forEach(p => {
+            const x = margin + p.i * cellSize;
+            const y = margin + p.j * cellSize;
+            ctx.beginPath();
+            ctx.arc(x, y, cellSize * 0.15, 0, 2 * Math.PI);
+            ctx.fill();
+        });
+
+
+        // Draw placed stones
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if (board[i][j] !== 0) {
+                    drawStone(i, j, board[i][j]);
+                }
+            }
+        }
+
+        // Draw pending move (ghost stone)
+        if (pendingMove !== null && !gameOver) {
+            drawGhostStone(pendingMove.i, pendingMove.j, playerPiece);
+        }
+
+        // Highlight AI's last move
+        if (lastComputerMove !== null) {
+            highlightComputerMove(lastComputerMove.i, lastComputerMove.j);
+        }
+    }
+
+    function drawStone(i, j, type) {
+        const x = margin + i * cellSize;
+        const y = margin + j * cellSize;
+        const radius = cellSize / 2 * 0.85; // Slightly smaller radius for spacing
+
+        ctx.save(); // Save context state
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.closePath();
+
+        // Add subtle shadow
+        ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+        ctx.shadowBlur = 5;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 2;
+
+        if (type === 1) { // Black stone
+            ctx.fillStyle = "#2c3e50"; // Dark blue-grey
+            ctx.fill();
+        } else { // White stone
+            ctx.fillStyle = "#ecf0f1"; // Light grey
+            ctx.fill();
+            // Add a thin border to white stones for contrast
+            ctx.strokeStyle = "#bdc3c7"; // Medium grey border
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+        ctx.restore(); // Restore context state (removes shadow for next drawings)
+    }
+
+    function drawGhostStone(i, j, type) {
+        const x = margin + i * cellSize;
+        const y = margin + j * cellSize;
+        const radius = cellSize / 2 * 0.85;
+
+        ctx.save();
+        ctx.globalAlpha = 0.5; // Make it semi-transparent
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.closePath();
+
+        if (type === 1) {
+            ctx.fillStyle = "#2c3e50";
+        } else {
+            ctx.fillStyle = "#ecf0f1";
+        }
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function highlightComputerMove(i, j) {
+        const x = margin + i * cellSize;
+        const y = margin + j * cellSize;
+        const radius = cellSize / 2 * 0.85; // Match stone radius
+
+        ctx.save();
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 3; // Make highlight thicker
+        ctx.beginPath();
+        // Draw arc slightly larger than the stone
+        ctx.arc(x, y, radius + 3, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.restore();
+    }
+
     // ===========================================
     // Game Logic & Win Check (Unchanged checkWin)
     // ===========================================
-    function checkWin(x, y, piece) { /* ... unchanged ... */ }
+
+    function checkWin(x, y, piece) {
+        const directions = [
+            { dx: 1, dy: 0 },  // Horizontal
+            { dx: 0, dy: 1 },  // Vertical
+            { dx: 1, dy: 1 },  // Diagonal /
+            { dx: 1, dy: -1 }  // Diagonal \
+        ];
+
+        for (const { dx, dy } of directions) {
+            let count = 1; // Count the piece just placed
+
+            // Check in the positive direction (dx, dy)
+            for (let k = 1; k < WIN_CONDITION; k++) {
+                const ni = x + k * dx;
+                const nj = y + k * dy;
+                if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize && board[ni][nj] === piece) {
+                    count++;
+                } else {
+                    break; // Stop if out of bounds or different piece
+                }
+            }
+
+            // Check in the negative direction (-dx, -dy)
+            for (let k = 1; k < WIN_CONDITION; k++) {
+                const ni = x - k * dx;
+                const nj = y - k * dy;
+                if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize && board[ni][nj] === piece) {
+                    count++;
+                } else {
+                    break; // Stop if out of bounds or different piece
+                }
+            }
+
+            if (count >= WIN_CONDITION) {
+                return true; // Found a winning line
+            }
+        }
+        return false; // No winning line found for this move
+    }
+
     // ===========================================
-    // AI Logic (Minimax with Alpha-Beta) - FURTHER IMPROVED
+    // AI Logic (Minimax with Alpha-Beta) - IMPROVED
     // ===========================================
 
      function cloneBoard(src) {
@@ -304,204 +498,160 @@
         return src.map(row => row.slice());
     }
 
-    // --- FURTHER IMPROVED Evaluation Function ---
-    // Evaluates patterns more accurately by checking flanking positions
+    // --- NEW: Enhanced Evaluation Function ---
+    // Based on pattern scoring inspired by the CSDN blog post
     function evaluateBoardState(boardState) {
+        const scores = {
+            // AI (Maximizer) scores - higher is better for AI
+            FIVE: 10000000,       // Five in a row
+            LIVE_FOUR: 100000,    // Unblocked four ****
+            DEAD_FOUR: 1000,      // One end blocked four ***
+            LIVE_THREE: 5000,     // Unblocked three **
+            DEAD_THREE: 50,       // One end blocked three *
+            LIVE_TWO: 10,         // Unblocked two
+            DEAD_TWO: 2,          // One end blocked two
+            LIVE_ONE: 1,          // Unblocked one
+            DEAD_ONE: 0,          // Blocked one (or less) - typically score 0
+
+            // Player (Minimizer) scores - more negative is better for AI (worse for player)
+            OPP_FIVE: -100000000, // Player five in a row (more urgent to block)
+            OPP_LIVE_FOUR: -500000, // Player live four (very urgent)
+            OPP_DEAD_FOUR: -2000,   // Player dead four
+            OPP_LIVE_THREE: -10000, // Player live three (urgent block)
+            OPP_DEAD_THREE: -100,   // Player dead three
+            OPP_LIVE_TWO: -20,
+            OPP_DEAD_TWO: -4,
+            OPP_LIVE_ONE: -1,
+            OPP_DEAD_ONE: 0
+        };
+
         let totalScore = 0;
         const directions = [{dx:1, dy:0}, {dx:0, dy:1}, {dx:1, dy:1}, {dx:1, dy:-1}];
+        // Use a Set to avoid recounting the same line segment in different directions/starts
+        const visited = new Set(); // Store keys like "i,j,dx,dy"
 
-        // Evaluate all lines of 5, 6, 7 for patterns
-        // A line of 6 allows checking open ends for a 5-in-a-row pattern etc.
-        for (let len = 5; len <= 7; len++) {
-             // Iterate through all possible starting points for a line of length 'len'
-            for (let i = 0; i < boardSize; i++) {
-                for (let j = 0; j < boardSize; j++) {
-                    for (const { dx, dy } of directions) {
-                        // Check if line fits on board
-                        const end_i = i + (len - 1) * dx;
-                        const end_j = j + (len - 1) * dy;
-                        if (end_i < 0 || end_i >= boardSize || end_j < 0 || end_j >= boardSize) {
-                            continue; // Line goes off board
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                 // No need to evaluate from empty spots
+                 if (boardState[i][j] === 0) continue;
+
+                for (const { dx, dy } of directions) {
+                    const key = `${i},${j},${dx},${dy}`;
+                    const reverseKey = `${i+4*dx},${j+4*dy},${-dx},${-dy}`; // Key for the end point in reverse dir
+
+                    // If this starting point and direction OR the reverse has been visited, skip
+                    if (visited.has(key) || visited.has(reverseKey)) continue;
+
+                    let line = []; // Stores the 5 pieces/empty spots in the line
+                    let validLine = true;
+                    for (let k = 0; k < 5; k++) {
+                        const ni = i + k * dx;
+                        const nj = j + k * dy;
+                        if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize) {
+                            line.push(boardState[ni][nj]);
+                        } else {
+                            validLine = false; // Line goes off board
+                            break;
                         }
+                    }
 
-                        // Extract the line segment
-                        let line = [];
-                        let counts = { ai: 0, player: 0, empty: 0 };
-                        for (let k = 0; k < len; k++) {
-                            const piece = boardState[i + k * dx][j + k * dy];
-                            line.push(piece);
-                            if (piece === aiPiece) counts.ai++;
-                            else if (piece === playerPiece) counts.player++;
-                            else counts.empty++;
-                        }
-
-                         // Skip lines with mixed pieces or no relevant pieces
-                        if (counts.ai > 0 && counts.player > 0) continue;
-                        if (counts.ai === 0 && counts.player === 0) continue;
-
-                        const pieceType = counts.ai > 0 ? aiPiece : playerPiece;
-                        const pieceCount = counts.ai > 0 ? counts.ai : counts.player;
-                        const scoreSign = counts.ai > 0 ? 1 : -1; // 1 for AI, -1 for Player
-
-                        // --- Pattern Evaluation based on count and open ends ---
-                        // This is a simplified example; a full implementation would be more complex,
-                        // checking specific patterns like "0XXXX0", "WXXXX0", "0XXX00" etc.
-
-                        // Check 5-in-a-row (WIN Condition)
-                        if (pieceCount === 5 && len >= 5) {
-                            totalScore += scoreSign * scores.FIVE;
-                            continue; // No need to evaluate further if a win is found for this line type
-                        }
-
-                        // Check 4-in-a-row patterns
-                        if (pieceCount === 4) {
-                            // Check flanking spots for open ends (using len=6 primarily)
-                            let openEnds = 0;
-                            const prev_i = i - dx;
-                            const prev_j = j - dy;
-                            const next_i = i + len * dx; // Correct index for position after the line
-                            const next_j = j + len * dy;
-
-                             // Simplified check: Requires a line of 6 (0XXXX0) or 7 (0XXXX00, 00XXXX0)
-                             // More accurately, check the direct neighbors of the 4-group
-                             // Example check for LIVE FOUR (0XXXX0 pattern within len 6)
-                            if (len === 6 && line[0] === 0 && line[5] === 0) {
-                                totalScore += scoreSign * scores.LIVE_FOUR;
-                            } else if (len >= 5) { // Check for DEAD FOUR (WXXXX0 or 0XXXXW etc.)
-                                let isDead = false;
-                                // Example: Check within a line of 5 (WXXXX, XXXXW)
-                                if(len === 5 && (line[0] !== 0 && line[0] !== pieceType) || (line[4] !== 0 && line[4] !== pieceType) ) {
-                                     isDead = true;
-                                }
-                                // Example: Check within a line of 6 (0XXXXW, WXXXX0)
-                                if(len === 6 && ((line[0] === 0 && line[5] !== 0 && line[5] !== pieceType) || (line[5] === 0 && line[0] !== 0 && line[0] !== pieceType)) ) {
-                                    isDead = true;
-                                }
-                                if(isDead) {
-                                   totalScore += scoreSign * scores.DEAD_FOUR;
-                                } else {
-                                    // Could be a four within a longer empty stretch, potentially live if neighbors allow
-                                    // For simplicity, if not clearly dead, treat as potential live four if one end is open in the 5-segment
-                                     if(len===5 && (line[0] === 0 || line[4] === 0)) {
-                                         totalScore += scoreSign * scores.LIVE_FOUR / 2; // Less certain than 0XXXX0
-                                     } else {
-                                          totalScore += scoreSign * scores.DEAD_FOUR; // Default to dead if unclear
-                                     }
-                                }
-                            }
-                        }
-
-                        // Check 3-in-a-row patterns (similar logic for Live/Dead based on flanking)
-                        if (pieceCount === 3) {
-                            // Example check for LIVE THREE (0XXX0 pattern within len 5)
-                            if(len === 5 && line[0] === 0 && line[4] === 0) {
-                                totalScore += scoreSign * scores.LIVE_THREE;
-                            } else if (len >= 4) { // Check DEAD THREE
-                                let isDead = false;
-                                // Example check within len 4 (WXXX, XXXW)
-                                if(len === 4 && ((line[0] !== 0 && line[0] !== pieceType) || (line[3] !== 0 && line[3] !== pieceType))) isDead = true;
-                                // Example check within len 5 (0XXXW, WXXX0)
-                                if(len === 5 && ((line[0] === 0 && line[4] !== 0 && line[4] !== pieceType) || (line[4] === 0 && line[0] !== 0 && line[0] !== pieceType))) isDead = true;
-
-                                if(isDead) {
-                                    totalScore += scoreSign * scores.DEAD_THREE;
-                                } else {
-                                     // Check for potential live three within len 4 (0XXX, XXX0)
-                                     if(len===4 && (line[0] === 0 || line[3] === 0)){
-                                          totalScore += scoreSign * scores.LIVE_THREE / 2; // Less certain
-                                     } else {
-                                          totalScore += scoreSign * scores.DEAD_THREE; // Default to dead
-                                     }
-                                }
-                            }
-                        }
-
-                        // Check 2-in-a-row patterns (similar logic)
-                         if (pieceCount === 2) {
-                             // Example Check for LIVE TWO (e.g., 0XX0 pattern within len 4)
-                             if(len === 4 && line[0] === 0 && line[3] === 0) {
-                                 totalScore += scoreSign * scores.LIVE_TWO;
-                             } else if(len >= 3) { // Check DEAD TWO
-                                let isDead = false;
-                                if(len === 3 && ((line[0] !== 0 && line[0] !== pieceType) || (line[2] !== 0 && line[2] !== pieceType))) isDead = true;
-                                if(len === 4 && ((line[0] === 0 && line[3] !== 0 && line[3] !== pieceType) || (line[3] === 0 && line[0] !== 0 && line[0] !== pieceType))) isDead = true;
-
-                                if(isDead) {
-                                     totalScore += scoreSign * scores.DEAD_TWO;
-                                } else {
-                                      if(len===3 && (line[0] === 0 || line[2] === 0)){
-                                           totalScore += scoreSign * scores.LIVE_TWO / 2;
-                                      } else {
-                                           totalScore += scoreSign * scores.DEAD_TWO;
-                                      }
-                                }
-                             }
-                         }
-                         // Add scores for single pieces if desired (LIVE/DEAD ONE) - less impactful usually
+                    if (validLine) {
+                        const score = evaluateLine(line, scores);
+                        totalScore += score;
+                        // Mark this line segment as visited (only the start point and direction)
+                        visited.add(key);
                     }
                 }
             }
         }
-
-        // Add a small penalty for opponent having initiative (being the next to move)
-        // if(turn === playerPiece) totalScore -= 10; else totalScore += 10;
-
         return totalScore;
     }
 
+    // Helper function to evaluate a single line of 5 spots
+    function evaluateLine(line, scoresConfig) {
+        let aiCount = 0;
+        let playerCount = 0;
+        let emptyCount = 0;
 
-    // --- FURTHER IMPROVED Candidate Move Generation & Prioritization ---
-    function getCandidateMoves(boardState, radius = 1) {
-        let candidates = new Map(); // Use Map: key=`${i},${j}`, value={i, j, bonus, priority}
-        let hasStones = false;
-        const center = Math.floor(boardSize / 2);
-        const opponentPiece = (aiPiece === 1) ? 2 : 1;
+        for (const piece of line) {
+            if (piece === aiPiece) aiCount++;
+            else if (piece === playerPiece) playerCount++;
+            else emptyCount++;
+        }
 
-        // --- Phase 1: Find Urgent Moves (Wins and Must-Blocks) ---
-        const urgentMoves = new Map();
-        for (let i = 0; i < boardSize; i++) {
-            for (let j = 0; j < boardSize; j++) {
-                if (boardState[i][j] === 0) { // Only consider empty spots
-                    // Check if AI can win here
-                    boardState[i][j] = aiPiece;
-                    if (checkWin(i, j, aiPiece)) {
-                        urgentMoves.set(`${i},${j}`, { i, j, priority: PRIORITIES.AI_WIN });
-                        boardState[i][j] = 0; // Backtrack
-                        // If AI can win, this is the ONLY move that matters at this level
-                        // console.log("Found AI win move:", i, j);
-                        // return [{ i, j, priority: PRIORITIES.AI_WIN, bonus: 0 }]; // Optimization: return immediately
-                        continue; // Check other potential win spots (though first is sufficient)
-                    }
-                    boardState[i][j] = 0; // Backtrack
+        // --- Rule 1: Mixed pieces - Line is useless ---
+        if (aiCount > 0 && playerCount > 0) {
+            return 0;
+        }
 
-                    // Check if Player could win here (must block)
-                    boardState[i][j] = opponentPiece;
-                    if (checkWin(i, j, opponentPiece)) {
-                         if (!urgentMoves.has(`${i},${j}`)) { // Don't overwrite AI win priority
-                             urgentMoves.set(`${i},${j}`, { i, j, priority: PRIORITIES.BLOCK_OPP_WIN });
-                         }
-                         // console.log("Found Must Block move:", i, j);
-                    }
-                    boardState[i][j] = 0; // Backtrack
-                }
+        // --- Rule 2: AI patterns ---
+        if (aiCount > 0) {
+            switch (aiCount) {
+                case 5: return scoresConfig.FIVE;
+                case 4:
+                    // Check if the empty spot makes it live (0XXXX or XXXX0)
+                    if (line[0] === 0 || line[4] === 0) return scoresConfig.LIVE_FOUR;
+                    else return scoresConfig.DEAD_FOUR; // Should be rare if only 1 empty, maybe XX0XX? Evaluate as dead.
+                case 3:
+                     // Check for live three (0XXX0)
+                    if (line[0] === 0 && line[4] === 0) return scoresConfig.LIVE_THREE;
+                    // Check for dead three (e.g., WXXX0, 0XXXW, X0XXX, XX0XX) - Needs more refined open end check
+                    // Simplified: If not live three, consider it dead three
+                    if(line[0] === 0 || line[4] === 0) return scoresConfig.DEAD_THREE; // At least one end open
+                    else return scoresConfig.DEAD_THREE / 2; // Both ends blocked is less valuable than dead three
+                case 2:
+                    // Check for live two (00XX0, 0XX00) - simplified
+                    if (line[0] === 0 && line[4] === 0 && (line[1] === 0 || line[3] === 0)) return scoresConfig.LIVE_TWO;
+                    if ((line[0] === 0 && line[3] === 0) || (line[1] === 0 && line[4] === 0)) return scoresConfig.LIVE_TWO; // 0XX0X or X0XX0 patterns
+                    // Simplified: If at least one end open
+                    if(line[0] === 0 || line[4] === 0) return scoresConfig.DEAD_TWO;
+                    else return scoresConfig.DEAD_TWO / 2;
+                case 1:
+                     if (line[0] === 0 && line[4] === 0) return scoresConfig.LIVE_ONE; // 0X000 or 00X00 etc.
+                     if(line[0] === 0 || line[4] === 0) return scoresConfig.DEAD_ONE; // Actually might be 0 for dead one
+                     else return 0; // Blocked one
+                default: return 0;
             }
         }
 
-        // If AI win moves exist, return only those (or the first one found)
-        const aiWinMoves = Array.from(urgentMoves.values()).filter(m => m.priority === PRIORITIES.AI_WIN);
-        if (aiWinMoves.length > 0) {
-            return aiWinMoves.map(m => ({...m, bonus: 0})); // Return all win moves or just the first
-            // return [{...aiWinMoves[0], bonus: 0}];
+        // --- Rule 3: Player patterns (negative scores) ---
+        if (playerCount > 0) {
+             switch (playerCount) {
+                case 5: return scoresConfig.OPP_FIVE;
+                case 4:
+                    if (line[0] === 0 || line[4] === 0) return scoresConfig.OPP_LIVE_FOUR;
+                    else return scoresConfig.OPP_DEAD_FOUR;
+                case 3:
+                    if (line[0] === 0 && line[4] === 0) {
+                        // Special case from blog: 0WWW0 -> higher threat
+                        if(line[1] === playerPiece && line[2] === playerPiece && line[3] === playerPiece) return scoresConfig.OPP_LIVE_THREE * 2; // Boost score for central live three
+                        return scoresConfig.OPP_LIVE_THREE;
+                    }
+                    if(line[0] === 0 || line[4] === 0) return scoresConfig.OPP_DEAD_THREE;
+                     else return scoresConfig.OPP_DEAD_THREE / 2;
+                case 2:
+                     if (line[0] === 0 && line[4] === 0 && (line[1] === 0 || line[3] === 0)) return scoresConfig.OPP_LIVE_TWO;
+                     if ((line[0] === 0 && line[3] === 0) || (line[1] === 0 && line[4] === 0)) return scoresConfig.OPP_LIVE_TWO;
+                     if(line[0] === 0 || line[4] === 0) return scoresConfig.OPP_DEAD_TWO;
+                     else return scoresConfig.OPP_DEAD_TWO / 2;
+                case 1:
+                     if (line[0] === 0 && line[4] === 0) return scoresConfig.OPP_LIVE_ONE;
+                     if(line[0] === 0 || line[4] === 0) return scoresConfig.OPP_DEAD_ONE;
+                     else return 0;
+                default: return 0;
+            }
         }
-        // If opponent win block moves exist, add them to the main candidate list with high priority
-        urgentMoves.forEach((move, key) => {
-             if (move.priority === PRIORITIES.BLOCK_OPP_WIN) {
-                  candidates.set(key, { ...move, bonus: 0 });
-             }
-        });
+
+        return 0; // Line contains only empty spots
+    }
 
 
-        // --- Phase 2: Generate Moves Around Existing Stones (Radius Search) ---
+    // --- NEW: Generate candidate moves with positional bonus ---
+    function getCandidateMoves(boardState, radius = 1) { // Reduced default radius to 1 for potentially faster pruning
+        let candidates = new Map();
+        let hasStones = false;
+        const center = Math.floor(boardSize / 2);
+
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {
                 if (boardState[i][j] !== 0) {
@@ -515,12 +665,11 @@
 
                             if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize && boardState[ni][nj] === 0) {
                                 const key = `${ni},${nj}`;
-                                if (!candidates.has(key)) { // Add only if not already an urgent move
-                                    // Add positional bonus
+                                if (!candidates.has(key)) {
+                                    // Add positional bonus (closer to center is slightly better)
                                     const dist = Math.abs(ni - center) + Math.abs(nj - center);
-                                    const bonus = Math.max(0, (center - dist)) * 0.1;
-                                    // Assign default NORMAL priority, will be refined later
-                                    candidates.set(key, { i: ni, j: nj, bonus: bonus, priority: PRIORITIES.NORMAL });
+                                    const bonus = Math.max(0, (center - dist)) * 0.1; // Simple bonus, max at center
+                                    candidates.set(key, { i: ni, j: nj, bonus: bonus });
                                 }
                             }
                         }
@@ -530,201 +679,143 @@
         }
 
         // If board is empty, suggest the center
-        if (!hasStones && candidates.size === 0) {
-            candidates.set(`${center},${center}`, { i: center, j: center, bonus: center * 0.1, priority: PRIORITIES.NORMAL });
+        if (!hasStones) {
+            candidates.set(`${center},${center}`, { i: center, j: center, bonus: center * 0.1 });
         }
 
-        // Fallback if radius search yields nothing
-        if (candidates.size === 0 && hasStones) {
-             console.warn("Radius search failed, expanding to all empty spots.");
+        // If radius search failed but board isn't empty (rare, but possible if stones are isolated)
+        // Use a larger radius or search all empty spots as fallback
+         if (candidates.size === 0 && hasStones) {
              for (let i = 0; i < boardSize; i++) {
                 for (let j = 0; j < boardSize; j++) {
                     if(boardState[i][j] === 0) {
                          const key = `${i},${j}`;
-                         if (!candidates.has(key)) {
+                         if (!candidates.has(key)) { // Avoid adding if already found by chance
                              const dist = Math.abs(i - center) + Math.abs(j - center);
                              const bonus = Math.max(0, (center - dist)) * 0.1;
-                             candidates.set(key, { i: i, j: j, bonus: bonus, priority: PRIORITIES.LOW }); // Lower priority for fallback
+                             candidates.set(key, { i: i, j: j, bonus: bonus });
                          }
                     }
                 }
              }
          }
 
-        // --- Phase 3: Refine Priorities (Check for Threes/Fours) ---
-        // Iterate through candidates generated in Phase 2 (or fallback)
-        candidates.forEach((move, key) => {
-            // Skip if it's already a high-priority block move
-            if (move.priority >= PRIORITIES.BLOCK_OPP_WIN) return;
-
-            let currentPriority = move.priority; // Start with NORMAL or LOW
-
-            // Simulate placing AI piece
-            boardState[move.i][move.j] = aiPiece;
-            // Check if this creates AI Live Four or other high-value patterns
-            // (Simplified check - a full check would evaluate the board or specific patterns)
-            if (createsPattern(boardState, move.i, move.j, aiPiece, PRIORITIES.AI_LIVE_FOUR)) { // Define createsPattern function
-                currentPriority = Math.max(currentPriority, PRIORITIES.AI_LIVE_FOUR);
-            } else if (createsPattern(boardState, move.i, move.j, aiPiece, PRIORITIES.AI_LIVE_THREE)) {
-                 currentPriority = Math.max(currentPriority, PRIORITIES.AI_LIVE_THREE);
-            }
-            boardState[move.i][move.j] = 0; // Backtrack
-
-            // Simulate placing opponent piece to check for necessary blocks
-            boardState[move.i][move.j] = opponentPiece;
-            // Check if placing here blocks an opponent Live Four etc.
-             if (createsPattern(boardState, move.i, move.j, opponentPiece, PRIORITIES.BLOCK_OPP_LIVE_FOUR)) {
-                 currentPriority = Math.max(currentPriority, PRIORITIES.BLOCK_OPP_LIVE_FOUR);
-            } else if (createsPattern(boardState, move.i, move.j, opponentPiece, PRIORITIES.BLOCK_OPP_LIVE_THREE)) {
-                 currentPriority = Math.max(currentPriority, PRIORITIES.BLOCK_OPP_LIVE_THREE);
-            }
-            // TODO: Add check for combo blocks (e.g., blocking dead four AND live three simultaneously)
-            boardState[move.i][move.j] = 0; // Backtrack
-
-            // Update the move's priority in the map
-            candidates.get(key).priority = currentPriority;
-        });
-
-
         return Array.from(candidates.values());
     }
 
-    // --- Helper function for getCandidateMoves (Simplified) ---
-    // This needs a proper pattern recognition implementation based on evaluateBoardState logic
-    // Placeholder function - returns false for now
-    function createsPattern(boardState, i, j, piece, patternType) {
-        // TODO: Implement pattern checking logic here.
-        // This would involve checking lines around (i, j) after the piece is placed
-        // to see if specific patterns (like live four, live three) are formed or blocked.
-        // This is complex and would reuse parts of the evaluation logic.
-        // Example simplified check (NOT ACCURATE):
-        /*
-        boardState[i][j] = piece; // Temporarily place
-        let score = evaluateBoardState(boardState); // Evaluate the temporary board
-        boardState[i][j] = 0; // Backtrack
-
-        if (patternType === PRIORITIES.AI_LIVE_FOUR && score > scores.LIVE_FOUR / 2) return true; // Rough check
-        if (patternType === PRIORITIES.BLOCK_OPP_LIVE_FOUR && score < scores.OPP_LIVE_FOUR / 2) return true; // Rough check
-        // ... add checks for other pattern types ...
-        */
-        return false; // Placeholder
-    }
-
-
-    // --- Minimax with Improved Move Ordering ---
+    // --- NEW: Minimax with Move Ordering ---
     function minimax(boardState, depth, alpha, beta, maximizingPlayer) {
-        let evalScore = evaluateBoardState(boardState); // Use improved evaluation
+        // Use the new evaluation function
+        let evalScore = evaluateBoardState(boardState);
 
-        // Terminal state checks
+        // Check for terminal state (win/loss detected by evaluation)
+        // Use large absolute values to signify terminal states
         if (Math.abs(evalScore) >= scores.FIVE) {
-            return maximizingPlayer ? evalScore - depth : evalScore + depth;
+            // Adjust score by depth: faster wins/losses are better
+             return maximizingPlayer ? evalScore - depth : evalScore + depth; // Correct adjustment
         }
+        // Check for max depth or draw
         if (depth === 0 || checkDraw()) {
             return evalScore;
         }
 
-        let candidates = getCandidateMoves(boardState); // Use improved candidate generation
+        let candidates = getCandidateMoves(boardState);
 
-        // --- Move Ordering (Priority First, then Heuristic Score) ---
+        // --- Move Ordering ---
         candidates.forEach(move => {
             boardState[move.i][move.j] = maximizingPlayer ? aiPiece : playerPiece;
-            // Calculate heuristic score for sorting within the same priority level
+            // Score includes board evaluation + positional bonus
             move.heuristicScore = evaluateBoardState(boardState) + (move.bonus || 0);
-            boardState[move.i][move.j] = 0; // Undo
+            boardState[move.i][move.j] = 0; // Undo move
         });
 
-        // Sort: Highest Priority first, then highest heuristic score for MaxPlayer, lowest for MinPlayer
-        candidates.sort((a, b) => {
-            if (b.priority !== a.priority) {
-                return b.priority - a.priority; // Higher priority first
-            }
-            // If priorities are equal, use heuristic score
-            return maximizingPlayer ? b.heuristicScore - a.heuristicScore : a.heuristicScore - b.heuristicScore;
-        });
-        // ------------------------------------------------------------
+        // Sort based on the heuristic score
+        candidates.sort((a, b) => maximizingPlayer ? b.heuristicScore - a.heuristicScore : a.heuristicScore - b.heuristicScore);
+        // --------------------
 
-        if (maximizingPlayer) { // AI's turn
+        if (maximizingPlayer) { // AI's turn (Maximizer)
             let maxEval = -Infinity;
             for (const move of candidates) {
                 boardState[move.i][move.j] = aiPiece;
                 let currentEval = minimax(boardState, depth - 1, alpha, beta, false);
                 boardState[move.i][move.j] = 0;
+
                 maxEval = Math.max(maxEval, currentEval);
                 alpha = Math.max(alpha, currentEval);
-                if (beta <= alpha) break; // Pruning
+                if (beta <= alpha) {
+                    break; // Beta cutoff
+                }
             }
             return maxEval;
-        } else { // Player's turn simulation
+        } else { // Player's turn simulation (Minimizer)
             let minEval = Infinity;
             for (const move of candidates) {
                 boardState[move.i][move.j] = playerPiece;
                 let currentEval = minimax(boardState, depth - 1, alpha, beta, true);
                 boardState[move.i][move.j] = 0;
+
                 minEval = Math.min(minEval, currentEval);
                 beta = Math.min(beta, currentEval);
-                if (beta <= alpha) break; // Pruning
+                if (beta <= alpha) {
+                    break; // Alpha cutoff
+                }
             }
             return minEval;
         }
     }
 
-    // --- Get Best Move using improved Minimax ---
+    // --- NEW: Get Best Move using new Minimax and Move Ordering ---
     function getBestMove(boardState, searchDepth) {
         let bestMove = null;
         let bestValue = -Infinity;
         let alpha = -Infinity;
         let beta = Infinity;
 
-        let candidates = getCandidateMoves(boardState); // Get prioritized candidates
+        let candidates = getCandidateMoves(boardState);
 
-        // --- Move Ordering at Root (Priority First, then Heuristic) ---
+         // --- Move Ordering at the Root ---
         candidates.forEach(move => {
             boardState[move.i][move.j] = aiPiece;
             move.heuristicScore = evaluateBoardState(boardState) + (move.bonus || 0);
-            boardState[move.i][move.j] = 0; // Undo
+            boardState[move.i][move.j] = 0;
         });
-        candidates.sort((a, b) => {
-            if (b.priority !== a.priority) return b.priority - a.priority;
-            return b.heuristicScore - a.heuristicScore; // AI is maximizing
-        });
-        // ---------------------------------------------------------
-
-        // If AI Win move exists, take it immediately
-        if (candidates.length > 0 && candidates[0].priority === PRIORITIES.AI_WIN) {
-             console.log("AI playing immediate win move.");
-             return { i: candidates[0].i, j: candidates[0].j };
-        }
+        candidates.sort((a, b) => b.heuristicScore - a.heuristicScore); // Sort for AI (maximizing)
+        // --------------------------------
 
         for (const move of candidates) {
             boardState[move.i][move.j] = aiPiece;
+            // Initial call to minimax for this move (next level is opponent minimizing)
             let moveValue = minimax(boardState, searchDepth - 1, alpha, beta, false);
-            boardState[move.i][move.j] = 0; // Undo
+            boardState[move.i][move.j] = 0; // Undo move
 
-             // Debugging log
-             // console.log(`Root Move (${move.i}, ${move.j}) -> Value: ${moveValue}, Prio: ${move.priority}, Heur: ${move.heuristicScore.toFixed(1)}`);
+            // Debugging log (optional)
+            // console.log(`Root Move (${move.i}, ${move.j}) evaluated to: ${moveValue}, Heuristic: ${move.heuristicScore}`);
 
             if (moveValue > bestValue) {
                 bestValue = moveValue;
-                bestMove = { i: move.i, j: move.j };
+                bestMove = { i: move.i, j: move.j }; // Store only coordinates needed
             }
+            // Update alpha at the root level as well
             alpha = Math.max(alpha, moveValue);
-            // Note: No beta cutoff at root, we need the absolute best move.
+             // No beta cutoff needed at the root level decision finding loop itself.
         }
 
-        // Fallback logic (should be less needed now)
+        // Fallback if no move found (shouldn't happen often with improved logic)
         if (!bestMove && candidates.length > 0) {
-             console.warn("No best move value determined, picking highest priority/heuristic candidate.");
-             bestMove = { i: candidates[0].i, j: candidates[0].j };
+             console.warn("No best move determined logically, picking highest heuristic candidate.");
+             bestMove = { i: candidates[0].i, j: candidates[0].j }; // Pick the best heuristic move
         } else if (!bestMove) {
              console.error("AI cannot find ANY valid move! Board likely full or error.");
-             for (let i = 0; i < boardSize; i++) for (let j = 0; j < boardSize; j++) if(boardState[i][j] === 0) return {i, j}; // Last resort
-             return null;
+             // Find any empty spot as a last resort
+             for (let i = 0; i < boardSize; i++) for (let j = 0; j < boardSize; j++) if(boardState[i][j] === 0) return {i, j};
+             return null; // Truly no moves left
         }
 
+        // console.log(`AI chose move (${bestMove.i}, ${bestMove.j}) with score ${bestValue}`);
         return bestMove;
     }
 
-    // Wrapper for AI move (Unchanged)
+    // Wrapper for AI move to handle state and timing (Unchanged)
     function computerMoveWrapper() {
          if (gameOver || turn !== "computer") return; // Extra safety check
 
@@ -736,10 +827,7 @@
         // Use setTimeout to allow UI update before potentially blocking computation
         setTimeout(() => {
             const currentBoardState = cloneBoard(board); // Use a copy for AI calculation
-            const startTime = performance.now(); // Track time
             const bestMove = getBestMove(currentBoardState, MAX_DEPTH); // Uses the improved AI logic
-            const endTime = performance.now();
-            console.log(`AI calculation took: ${(endTime - startTime).toFixed(2)} ms`);
 
             // --- Critical Check: Ensure game hasn't ended or turn changed while AI was thinking ---
             if (gameOver || turn !== "computer") {
@@ -768,31 +856,106 @@
             } else {
                  // --- Handle AI Error / No Move Found ---
                  console.error("AI selected an invalid move, no move found, or spot taken.", bestMove);
-                 // Fallback logic... (unchanged)
+                 // Attempt a simple fallback: find the first available empty spot
                  let foundFallback = false;
-                 for (let i = 0; i < boardSize; i++){ /* ... */ }
-                 if (!foundFallback && !gameOver) { endGame(0); }
-                 isAiComputing = false;
+                 for (let i = 0; i < boardSize; i++){
+                     for (let j = 0; j < boardSize; j++){
+                         if(board[i][j] === 0){
+                             console.warn(`AI Error: Fallback move to (${i}, ${j})`);
+                             board[i][j] = aiPiece;
+                             lastComputerMove = {i, j};
+                             drawBoard();
+                             if (checkWin(i, j, aiPiece)) { endGame(aiPiece); }
+                             else if (checkDraw()) { endGame(0); }
+                             else { turn = "player"; gameMessage.innerText = "轮到你了，请落子。"; }
+                             foundFallback = true;
+                             break;
+                         }
+                     }
+                      if(foundFallback) break;
+                 }
+                 // If still no move found (board is completely full), declare draw
+                 if (!foundFallback && !gameOver) {
+                     console.warn("AI Fallback failed: No empty spots left.");
+                     endGame(0);
+                 }
+                 isAiComputing = false; // Ensure flag is reset even on error/fallback
             }
-        }, 50);
+        }, 50); // Short delay (e.g., 50ms) allows UI redraw before potential freeze
     }
 
 
     // ===========================================
     // Event Listeners (Unchanged)
     // ===========================================
-    canvas.addEventListener('click', function(e) { /* ... unchanged ... */ });
+
+    canvas.addEventListener('click', function(e) {
+        // --- Guard clauses: Check if interaction should be processed ---
+        if (gameOver || turn !== "player" || isAiComputing) {
+            return; // Ignore clicks if game over, not player's turn, or AI is busy
+        }
+
+        // --- Calculate click position relative to canvas internal resolution ---
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = internalCanvasSize / rect.width;
+        const scaleY = internalCanvasSize / rect.height;
+        const canvasX = (e.clientX - rect.left) * scaleX;
+        const canvasY = (e.clientY - rect.top) * scaleY;
+
+        // --- Convert canvas coordinates to board grid indices ---
+        const i = Math.round((canvasX - margin) / cellSize);
+        const j = Math.round((canvasY - margin) / cellSize);
+
+        // --- Validate the calculated grid position ---
+        if (i < 0 || i >= boardSize || j < 0 || j >= boardSize || board[i][j] !== 0) {
+             pendingMove = null; // Cancel pending move if click is invalid
+             drawBoard(); // Redraw to remove potential ghost stone
+             return; // Ignore clicks outside grid or on occupied spots
+        }
+
+        // --- Handle two-step move confirmation ---
+        if (pendingMove && pendingMove.i === i && pendingMove.j === j) {
+            // --- Confirm the move (Second click on the same spot) ---
+            board[i][j] = playerPiece;      // Place the player's piece
+            pendingMove = null;             // Clear the pending state
+            lastComputerMove = null;        // Clear AI highlight after player confirms move
+            drawBoard();                    // Redraw the board with the new piece
+
+            // --- Check game status after player's move ---
+            if (checkWin(i, j, playerPiece)) {
+                endGame(playerPiece);       // Player wins
+            } else if (checkDraw()) {
+                endGame(0);                 // Draw
+            } else {
+                // --- Game continues: Switch turn to computer ---
+                turn = "computer";
+                // Initiate AI move using the wrapper function
+                computerMoveWrapper();
+            }
+        } else {
+            // --- Set pending move (First click or click on a different empty spot) ---
+            pendingMove = { i, j };         // Store the potential move location
+            drawBoard();                    // Redraw to show the ghost stone
+            gameMessage.innerText = "再次点击确认落子，或点击其他位置更改。"; // Update user guidance
+        }
+    });
+
+    // Button listeners
     firstBtn.addEventListener('click', () => setupGame(true));
     secondBtn.addEventListener('click', () => setupGame(false));
     restartBtn.addEventListener('click', restartGame);
-    // ===========================================
+
     // Initial setup on page load
-    // ===========================================
     function initializeGame() {
         canvas.width = internalCanvasSize;
         canvas.height = internalCanvasSize;
-        // Make scores accessible (though evaluateBoardState is now self-contained)
-        // window.scores = scores; // Optional
+        // Define the scores object globally for the new evaluate function
+        window.scores = {
+            FIVE: 10000000, LIVE_FOUR: 100000, DEAD_FOUR: 1000,
+            LIVE_THREE: 5000, DEAD_THREE: 50, LIVE_TWO: 10, DEAD_TWO: 2, LIVE_ONE: 1, DEAD_ONE: 0,
+            OPP_FIVE: -100000000, OPP_LIVE_FOUR: -500000, OPP_DEAD_FOUR: -2000,
+            OPP_LIVE_THREE: -10000, OPP_DEAD_THREE: -100, OPP_LIVE_TWO: -20, OPP_DEAD_TWO: -4, OPP_LIVE_ONE: -1, OPP_DEAD_ONE: 0
+        };
         restartGame(); // Start in the initial "choose side" state
     }
 
