@@ -17,18 +17,18 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>Game: 五子棋游戏 (高级AI版) - Fomalhaut 's Blog</title>
+  <title>Game: 五子棋游戏 - Fomalhaut 's Blog</title>
 
   
     <meta name="description" content="欢迎来到五子棋游戏游戏开始前请先选择先手或后手（玩家选择先手则执黑，其余执白），游戏结束后支持重新开始游戏。支持两步确认落子。电脑最后一次落子处以红色圆环标出。    &#x2F;* 页面基础样式 *&#x2F;   body{background:#f8f8f8;color:#333;font-family:&#39;Segoe UI&#39;,Tahoma,Geneva,Verdana,sans-serif;margin:0;p">
 <meta property="og:type" content="website">
-<meta property="og:title" content="五子棋游戏 (高级AI版)">
+<meta property="og:title" content="五子棋游戏">
 <meta property="og:url" content="https://fomalhaut9918.github.io/wiki/game/index.html">
 <meta property="og:site_name" content="Fomalhaut &#39;s Blog">
 <meta property="og:description" content="欢迎来到五子棋游戏游戏开始前请先选择先手或后手（玩家选择先手则执黑，其余执白），游戏结束后支持重新开始游戏。支持两步确认落子。电脑最后一次落子处以红色圆环标出。    &#x2F;* 页面基础样式 *&#x2F;   body{background:#f8f8f8;color:#333;font-family:&#39;Segoe UI&#39;,Tahoma,Geneva,Verdana,sans-serif;margin:0;p">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-04-09T04:52:30.181Z">
-<meta property="article:modified_time" content="2025-04-09T04:52:30.181Z">
+<meta property="article:published_time" content="2025-04-09T05:44:09.267Z">
+<meta property="article:modified_time" content="2025-04-09T05:44:09.267Z">
 <meta property="article:author" content="Fomalhaut">
 <meta property="article:tag" content="blog">
 <meta name="twitter:card" content="summary">
@@ -86,12 +86,12 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/game/index.html">Game</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-04-09T04:52:30.181Z">2025-04-09</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-04-09T05:44:09.267Z">2025-04-09</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>五子棋游戏 (高级AI版)</span></h1>
+        <h1 class="text title"><span>五子棋游戏</span></h1>
         
       </div>
     </div>
@@ -145,8 +145,9 @@
     const internalCanvasSize = 640;  // 画布内部大小
     const margin = 30;  // 边距
     const WIN_CONDITION = 5;  // 获胜条件：连续5子
-    const MAX_SEARCH_DEPTH = 4; // 最大搜索深度
-    const THREAT_SEARCH_DEPTH = 6; // 威胁空间搜索深度
+    const MAX_SEARCH_DEPTH = 6; // 最大搜索深度，增加以提高棋力
+    const THREAT_SEARCH_DEPTH = 8; // 威胁空间搜索深度，增加以改进威胁搜索
+    const VCF_SEARCH_DEPTH = 10; // 连续冲四胜利搜索深度
     
     // --- DOM 元素 ---
     const canvas = document.getElementById('gomokuCanvas');
@@ -173,42 +174,38 @@
     // --- 计算棋盘单元格大小 ---
     const cellSize = (internalCanvasSize - 2 * margin) / (boardSize - 1);
 
-    // --- 棋型评分系统 ---
-    // 定义各种棋型的评分
+    // --- 增强型棋型评分系统 ---
     const PATTERN_SCORES = {
-        // 连五
-        FIVE: 1000000,
+        // 必胜局面
+        FIVE: 10000000,  // 连五，绝对胜利
         
-        // 活四（两端都是空位）
-        OPEN_FOUR: 100000,
+        // 必杀棋型
+        OPEN_FOUR: 1000000,  // 活四，下一步必胜
+        DOUBLE_FOUR: 500000, // 双冲四，也是下一步必胜
+        FOUR_THREE: 400000,  // 冲四活三组合，强力威胁
         
-        // 冲四（只有一端是空位）
-        FOUR: 10000,
+        // 强威胁棋型
+        FOUR: 50000,         // 冲四，需要防守
+        DOUBLE_OPEN_THREE: 100000, // 双活三，非常强力的棋型
         
-        // 双活三
-        DOUBLE_OPEN_THREE: 50000,
+        // 中等威胁棋型
+        OPEN_THREE: 10000,   // 活三
+        DOUBLE_THREE: 9000,  // 双眠三
+        THREE_TWO: 8000,     // 眠三活二组合
         
-        // 活三（两端都是空位）
-        OPEN_THREE: 5000,
+        // 轻微威胁棋型
+        THREE: 1000,         // 眠三
+        OPEN_TWO: 500,       // 活二
+        DOUBLE_TWO: 400,     // 双眠二
         
-        // 眠三（只有一端是空位）
-        THREE: 1000,
+        // 基础棋型
+        TWO: 100,            // 眠二
+        OPEN_ONE: 50,        // 活一
+        ONE: 10,             // 眠一
         
-        // 活二（两端都是空位）
-        OPEN_TWO: 500,
-        
-        // 眠二（只有一端是空位）
-        TWO: 100,
-        
-        // 活一（两端都是空位）
-        OPEN_ONE: 50,
-        
-        // 眠一（只有一端是空位）
-        ONE: 10,
-        
-        // 权重系数
-        ATTACK_FACTOR: 1.0,   // 进攻系数
-        DEFENSE_FACTOR: 1.1   // 防守系数（略高于进攻，鼓励防守）
+        // 权重系数 - 调整进攻和防守的平衡
+        ATTACK_FACTOR: 1.1,   // 进攻系数略高，鼓励主动进攻
+        DEFENSE_FACTOR: 1.2   // 防守系数更高，确保不会忽视严重威胁
     };
 
     // --- 棋盘位置权重 ---
@@ -256,7 +253,14 @@
             {i: 7, j: 7}, // 天元
             {i: 3, j: 3}, // 星位
             {i: 11, j: 11} // 应手
-        ]
+        ],
+        // 更多高级开局策略
+        'advanced_responses': {
+            // 应对黑方其他常见开局的策略
+            '7-6': [{i: 7, j: 8}, {i: 8, j: 7}, {i: 6, j: 7}], // 应对黑方花月
+            '3-3': [{i: 7, j: 7}, {i: 11, j: 11}],             // 应对黑方星位
+            '3-11': [{i: 7, j: 7}, {i: 11, j: 3}]              // 应对黑方星位变形
+        }
     };
 
     // --- 初始化历史表 ---
@@ -374,57 +378,138 @@
     // 分析棋型的核心函数
     function analyzeLine(line, piece) {
         const opponent = piece === 1 ? 2 : 1;
+        const pieceChar = piece.toString();
         
+        // 提取复杂棋型
         // 连五
-        if (line.includes(piece.toString().repeat(5))) {
+        if (line.includes(pieceChar.repeat(5))) {
             return PATTERN_SCORES.FIVE;
         }
         
         // 活四: 0XXXX0 (一步就能连五)
-        if (line.includes(`0${piece.toString().repeat(4)}0`)) {
+        if (line.includes(`0${pieceChar.repeat(4)}0`)) {
             return PATTERN_SCORES.OPEN_FOUR;
         }
         
-        // 冲四: XXXX0 或 0XXXX (单向可以连五)
-        if (line.includes(`${piece.toString().repeat(4)}0`) || 
-            line.includes(`0${piece.toString().repeat(4)}`)) {
+        // 检查多个冲四形式
+        let fourCount = 0;
+        if (line.includes(`${pieceChar.repeat(4)}0`)) fourCount++;
+        if (line.includes(`0${pieceChar.repeat(4)}`)) fourCount++;
+        if (line.includes(`${pieceChar}0${pieceChar.repeat(3)}`)) fourCount++;
+        if (line.includes(`${pieceChar.repeat(2)}0${pieceChar.repeat(2)}`)) fourCount++;
+        if (line.includes(`${pieceChar.repeat(3)}0${pieceChar}`)) fourCount++;
+        
+        // 双冲四
+        if (fourCount >= 2) {
+            return PATTERN_SCORES.DOUBLE_FOUR;
+        }
+        
+        // 单冲四
+        if (fourCount === 1) {
+            // 检查是否同时有活三 (冲四活三组合)
+            if (line.includes(`0${pieceChar.repeat(3)}0`)) {
+                return PATTERN_SCORES.FOUR_THREE;
+            }
             return PATTERN_SCORES.FOUR;
         }
         
-        // 活三: 0XXX0 (可以形成活四)
-        if (line.includes(`0${piece.toString().repeat(3)}0`)) {
+        // 检查活三
+        let openThreeCount = 0;
+        const openThreePattern = `0${pieceChar.repeat(3)}0`;
+        let pos = line.indexOf(openThreePattern);
+        while (pos !== -1) {
+            openThreeCount++;
+            pos = line.indexOf(openThreePattern, pos + 1);
+        }
+        
+        // 双活三
+        if (openThreeCount >= 2) {
+            return PATTERN_SCORES.DOUBLE_OPEN_THREE;
+        }
+        
+        // 单活三
+        if (openThreeCount === 1) {
             return PATTERN_SCORES.OPEN_THREE;
         }
         
-        // 眠三: XXX0 或 0XXX
-        if (line.includes(`${piece.toString().repeat(3)}0`) || 
-            line.includes(`0${piece.toString().repeat(3)}`)) {
+        // 检查眠三
+        let threeCount = 0;
+        if (line.includes(`${pieceChar.repeat(3)}0`)) threeCount++;
+        if (line.includes(`0${pieceChar.repeat(3)}`)) threeCount++;
+        if (line.includes(`${pieceChar}0${pieceChar.repeat(2)}`)) threeCount++;
+        if (line.includes(`${pieceChar.repeat(2)}0${pieceChar}`)) threeCount++;
+        
+        // 双眠三
+        if (threeCount >= 2) {
+            return PATTERN_SCORES.DOUBLE_THREE;
+        }
+        
+        // 眠三 + 活二组合
+        if (threeCount === 1 && line.includes(`0${pieceChar.repeat(2)}0`)) {
+            return PATTERN_SCORES.THREE_TWO;
+        }
+        
+        // 单眠三
+        if (threeCount === 1) {
             return PATTERN_SCORES.THREE;
         }
         
-        // 活二: 0XX0 (可以形成活三)
-        if (line.includes(`0${piece.toString().repeat(2)}0`)) {
+        // 检查活二
+        let openTwoCount = 0;
+        const openTwoPattern = `0${pieceChar.repeat(2)}0`;
+        pos = line.indexOf(openTwoPattern);
+        while (pos !== -1) {
+            openTwoCount++;
+            pos = line.indexOf(openTwoPattern, pos + 1);
+        }
+        
+        // 双活二
+        if (openTwoCount >= 2) {
+            return PATTERN_SCORES.DOUBLE_TWO;
+        }
+        
+        // 单活二
+        if (openTwoCount === 1) {
             return PATTERN_SCORES.OPEN_TWO;
         }
         
-        // 眠二: XX0 或 0XX
-        if (line.includes(`${piece.toString().repeat(2)}0`) || 
-            line.includes(`0${piece.toString().repeat(2)}`)) {
+        // 眠二
+        if (line.includes(`${pieceChar.repeat(2)}0`) || 
+            line.includes(`0${pieceChar.repeat(2)}`) ||
+            line.includes(`${pieceChar}0${pieceChar}`)) {
             return PATTERN_SCORES.TWO;
         }
         
-        // 活一: 0X0 (可以形成活二)
-        if (line.includes(`0${piece.toString()}0`)) {
+        // 活一
+        if (line.includes(`0${pieceChar}0`)) {
             return PATTERN_SCORES.OPEN_ONE;
         }
         
-        // 眠一: X0 或 0X
-        if (line.includes(`${piece.toString()}0`) || 
-            line.includes(`0${piece.toString()}`)) {
+        // 眠一
+        if (line.includes(`${pieceChar}0`) || 
+            line.includes(`0${pieceChar}`)) {
             return PATTERN_SCORES.ONE;
         }
         
         return 0;
+    }
+    
+    // --- 提取线条上的棋型 ---
+    function extractLine(row, col, dr, dc, radius) {
+        let line = '';
+        
+        for (let step = -radius; step <= radius; step++) {
+            const r = row + dr * step;
+            const c = col + dc * step;
+            
+            if (r >= 0 && r < boardSize && c >= 0 && c < boardSize) {
+                line += board[r][c];
+            } else {
+                line += 'E'; // 边界外用E表示
+            }
+        }
+        
+        return line.replace(/0/g, '0').replace(/1/g, '1').replace(/2/g, '2').replace(/E/g, 'E');
     }
     
     // --- 新的五元组评估方法 ---
@@ -440,115 +525,99 @@
         
         let totalScore = 0;
         
+        // 威胁统计
+        let threats = {
+            FIVE: 0,
+            OPEN_FOUR: 0,
+            FOUR: 0,
+            OPEN_THREE: 0,
+            THREE: 0,
+            OPEN_TWO: 0,
+            TWO: 0
+        };
+        
         // 检查每个方向上的五元组
         for (const {dr, dc} of directions) {
-            // 保存当前方向上的棋子序列
-            let line = '';
+            // 获取当前方向上的线
+            const line = extractLine(row, col, dr, dc, 5);
             
-            // 向前扩展4步，向后扩展4步，总共检查9个位置
-            for (let step = -4; step <= 4; step++) {
-                const r = row + dr * step;
-                const c = col + dc * step;
-                
-                // 检查位置是否越界
-                if (r >= 0 && r < boardSize && c >= 0 && c < boardSize) {
-                    line += board[r][c];
-                } else {
-                    line += 'E'; // 边界外用E表示
-                }
-            }
+            // 分析该线上的棋型
+            const score = analyzeLine(line, piece);
+            totalScore += score;
             
-            // 将棋盘状态编码为字符串，便于分析
-            line = line.replace(/0/g, '0').replace(/1/g, '1').replace(/2/g, '2').replace(/E/g, 'E');
-            
-            // 提取五元组
-            for (let i = 0; i <= 4; i++) {
-                const fiveGroup = line.substr(i, 5);
-                
-                // 只有五元组内部不含边界时才评估
-                if (!fiveGroup.includes('E')) {
-                    // 计算当前五元组中自己棋子和对手棋子的数量
-                    const selfCount = (fiveGroup.match(new RegExp(piece.toString(), 'g')) || []).length;
-                    const opponentCount = (fiveGroup.match(new RegExp((3-piece).toString(), 'g')) || []).length;
-                    const emptyCount = (fiveGroup.match(/0/g) || []).length;
-                    
-                    // 混合棋型，无法形成五连
-                    if (selfCount > 0 && opponentCount > 0) continue;
-                    
-                    // 自己的棋型评分
-                    if (selfCount > 0 && opponentCount === 0) {
-                        if (selfCount === 5) totalScore += PATTERN_SCORES.FIVE;
-                        else if (selfCount === 4 && emptyCount === 1) {
-                            if (fiveGroup.includes(`0${piece.toString().repeat(4)}`) || 
-                                fiveGroup.includes(`${piece.toString().repeat(4)}0`)) {
-                                totalScore += PATTERN_SCORES.FOUR;
-                            } else {
-                                totalScore += PATTERN_SCORES.OPEN_FOUR;
-                            }
-                        }
-                        else if (selfCount === 3 && emptyCount === 2) {
-                            if (fiveGroup === `0${piece.toString().repeat(3)}0`) {
-                                totalScore += PATTERN_SCORES.OPEN_THREE;
-                            } else {
-                                totalScore += PATTERN_SCORES.THREE;
-                            }
-                        }
-                        else if (selfCount === 2 && emptyCount === 3) {
-                            if (fiveGroup.includes(`0${piece.toString().repeat(2)}0`)) {
-                                totalScore += PATTERN_SCORES.OPEN_TWO;
-                            } else {
-                                totalScore += PATTERN_SCORES.TWO;
-                            }
-                        }
-                        else if (selfCount === 1 && emptyCount === 4) {
-                            if (fiveGroup.includes(`0${piece.toString()}0`)) {
-                                totalScore += PATTERN_SCORES.OPEN_ONE;
-                            } else {
-                                totalScore += PATTERN_SCORES.ONE;
-                            }
-                        }
-                    }
-                    
-                    // 对手的棋型评分 (负分，表示潜在威胁)
-                    if (opponentCount > 0 && selfCount === 0) {
-                        if (opponentCount === 5) totalScore -= PATTERN_SCORES.FIVE * 1.2;
-                        else if (opponentCount === 4 && emptyCount === 1) {
-                            if (fiveGroup.includes(`0${(3-piece).toString().repeat(4)}`) || 
-                                fiveGroup.includes(`${(3-piece).toString().repeat(4)}0`)) {
-                                totalScore -= PATTERN_SCORES.FOUR * 1.2;
-                            } else {
-                                totalScore -= PATTERN_SCORES.OPEN_FOUR * 1.2;
-                            }
-                        }
-                        else if (opponentCount === 3 && emptyCount === 2) {
-                            if (fiveGroup === `0${(3-piece).toString().repeat(3)}0`) {
-                                totalScore -= PATTERN_SCORES.OPEN_THREE * 1.2;
-                            } else {
-                                totalScore -= PATTERN_SCORES.THREE * 1.2;
-                            }
-                        }
-                        else if (opponentCount === 2 && emptyCount === 3) {
-                            if (fiveGroup.includes(`0${(3-piece).toString().repeat(2)}0`)) {
-                                totalScore -= PATTERN_SCORES.OPEN_TWO * 1.1;
-                            } else {
-                                totalScore -= PATTERN_SCORES.TWO * 1.1;
-                            }
-                        }
-                    }
-                }
-            }
+            // 更新威胁统计
+            if (score >= PATTERN_SCORES.FIVE) threats.FIVE++;
+            else if (score >= PATTERN_SCORES.OPEN_FOUR) threats.OPEN_FOUR++;
+            else if (score >= PATTERN_SCORES.FOUR) threats.FOUR++;
+            else if (score >= PATTERN_SCORES.OPEN_THREE) threats.OPEN_THREE++;
+            else if (score >= PATTERN_SCORES.THREE) threats.THREE++;
+            else if (score >= PATTERN_SCORES.OPEN_TWO) threats.OPEN_TWO++;
+            else if (score >= PATTERN_SCORES.TWO) threats.TWO++;
+        }
+        
+        // 检查复合威胁（多个方向的综合威胁）
+        if (threats.OPEN_FOUR > 0 && threats.FOUR > 0) {
+            totalScore += PATTERN_SCORES.DOUBLE_FOUR * 0.5; // 额外奖励，但避免重复计算
+        }
+        
+        if (threats.OPEN_THREE >= 2) {
+            totalScore += PATTERN_SCORES.DOUBLE_OPEN_THREE * 0.5; // 额外奖励
+        }
+        
+        if (threats.THREE >= 2) {
+            totalScore += PATTERN_SCORES.DOUBLE_THREE * 0.5; // 额外奖励
         }
         
         return totalScore;
     }
     
-    // --- 生成有效的候选落子点 ---
-    function generateCandidates() {
+    // --- 检查点周围是否有棋子 ---
+    function hasNeighbor(row, col, radius) {
+        for (let i = Math.max(0, row - radius); i <= Math.min(boardSize - 1, row + radius); i++) {
+            for (let j = Math.max(0, col - radius); j <= Math.min(boardSize - 1, col + radius); j++) {
+                if (board[i][j] !== 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    // --- 创建威胁热力图 ---
+    function createThreatMap() {
+        // 初始化威胁图
+        const threatMap = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
+        
+        // 遍历棋盘，分析每个空点
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if (board[i][j] !== 0) continue;
+                
+                // 假设AI在此落子
+                board[i][j] = aiPiece;
+                const aiThreat = evaluateThreatPattern(i, j, aiPiece);
+                board[i][j] = 0;
+                
+                // 假设玩家在此落子
+                board[i][j] = playerPiece;
+                const playerThreat = evaluateThreatPattern(i, j, playerPiece);
+                board[i][j] = 0;
+                
+                // 总威胁值
+                threatMap[i][j] = aiThreat * PATTERN_SCORES.ATTACK_FACTOR + 
+                                 playerThreat * PATTERN_SCORES.DEFENSE_FACTOR;
+            }
+        }
+        
+        return threatMap;
+    }
+    
+    // --- 高级候选点生成 ---
+    function generateSmartCandidates() {
         const candidates = [];
         const center = Math.floor(boardSize / 2);
-        const radius = 1; // 搜索半径
         
-        // 检查是否是开局
+        // 计算棋盘上的棋子总数
         let stoneCount = 0;
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {
@@ -572,7 +641,7 @@
                 board[i][j] = aiPiece;
                 if (checkWin(i, j, aiPiece)) {
                     board[i][j] = 0;
-                    return [{i: i, j: j, score: PATTERN_SCORES.FIVE}];
+                    return [{i: i, j: j, score: PATTERN_SCORES.FIVE * 2}];
                 }
                 board[i][j] = 0;
                 
@@ -580,28 +649,65 @@
                 board[i][j] = playerPiece;
                 if (checkWin(i, j, playerPiece)) {
                     board[i][j] = 0;
-                    return [{i: i, j: j, score: PATTERN_SCORES.FIVE * 0.9}];
+                    return [{i: i, j: j, score: PATTERN_SCORES.FIVE}];
                 }
                 board[i][j] = 0;
             }
         }
         
-        // 创建棋盘热力图
-        const heatMap = createHeatMap();
-        
-        // 根据热力图生成候选点
+        // 检查VCF路径
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {
-                if (board[i][j] !== 0 || heatMap[i][j] === 0) continue;
+                if (board[i][j] !== 0) continue;
+                
+                // 检查AI是否有VCF
+                if (hasNeighbor(i, j, 2)) { // 只考虑周围有棋子的位置
+                    const vcfResult = simulateVCF(i, j, aiPiece, VCF_SEARCH_DEPTH);
+                    if (vcfResult) {
+                        return [{i: i, j: j, score: PATTERN_SCORES.FIVE * 1.5}];
+                    }
+                }
+            }
+        }
+        
+        // 创建威胁热力图
+        const threatMap = createThreatMap();
+        const heatMap = createHeatMap();
+        
+        // 根据威胁热力图和普通热力图生成候选点
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if (board[i][j] !== 0) continue;
+                
+                // 只考虑周围有棋子的位置
+                if (!hasNeighbor(i, j, 2)) continue;
                 
                 // 评估此位置的价值
-                const positionValue = evaluatePosition(i, j);
+                const positionValue = POSITION_VALUES[i][j] * 2;
                 const historyScore = historyTable[i][j]; // 历史表分数
+                const threatValue = threatMap[i][j];
+                const heatValue = heatMap[i][j] * 2;
+                
+                // 试探法: 如果AI在此落子会获得多少分
+                board[i][j] = aiPiece;
+                const aiScore = evaluateFiveGroup(i, j, aiPiece);
+                board[i][j] = 0;
+                
+                // 试探法: 如果玩家在此落子会获得多少分
+                board[i][j] = playerPiece;
+                const playerScore = evaluateFiveGroup(i, j, playerPiece);
+                board[i][j] = 0;
+                
+                // 综合评分
+                const totalScore = 
+                    aiScore * PATTERN_SCORES.ATTACK_FACTOR + 
+                    playerScore * PATTERN_SCORES.DEFENSE_FACTOR +
+                    positionValue + threatValue + heatValue + historyScore;
                 
                 candidates.push({
                     i: i,
                     j: j,
-                    score: positionValue + heatMap[i][j] + historyScore * 0.5
+                    score: totalScore
                 });
             }
         }
@@ -626,8 +732,173 @@
         // 按分数排序
         candidates.sort((a, b) => b.score - a.score);
         
-        // 返回前15个候选点，采用启发式缩小搜索空间
-        return candidates.slice(0, 15);
+        // 返回前20个候选点，增加搜索范围以提高棋力
+        return candidates.slice(0, 20);
+    }
+    
+    // --- VCF搜索(Victory by Continuous Fours) ---
+    function simulateVCF(row, col, piece, depth) {
+        if (depth <= 0) return false;
+        
+        // 模拟落子
+        board[row][col] = piece;
+        
+        // 检查是否获胜
+        if (checkWin(row, col, piece)) {
+            board[row][col] = 0; // 恢复
+            return true;
+        }
+        
+        // 检查是否形成冲四局面
+        if (hasForcingMove(row, col, piece)) {
+            // 找出对手的防守点
+            const defensePoints = findDefensePoints(piece);
+            
+            // 如果对手无法防守，则获胜
+            if (defensePoints.length === 0) {
+                board[row][col] = 0; // 恢复
+                return true;
+            }
+            
+            // 检查每个防守点
+            for (const defense of defensePoints) {
+                // 模拟对手防守
+                board[defense.i][defense.j] = 3 - piece;
+                
+                // 寻找下一步冲四
+                let canWin = false;
+                
+                // 找出我方的下一个冲四点
+                for (let i = 0; i < boardSize; i++) {
+                    for (let j = 0; j < boardSize; j++) {
+                        if (board[i][j] !== 0) continue;
+                        
+                        // 递归检查
+                        if (simulateVCF(i, j, piece, depth - 1)) {
+                            canWin = true;
+                            break;
+                        }
+                    }
+                    if (canWin) break;
+                }
+                
+                // 恢复对手的防守
+                board[defense.i][defense.j] = 0;
+                
+                // 如果对某个防守我方无法获胜，则整个VCF路径失败
+                if (!canWin) {
+                    board[row][col] = 0; // 恢复
+                    return false;
+                }
+            }
+            
+            // 所有防守都能被突破，VCF成功
+            board[row][col] = 0; // 恢复
+            return true;
+        }
+        
+        // 不是冲四局面，无法使用VCF
+        board[row][col] = 0; // 恢复
+        return false;
+    }
+    
+    // --- 检查是否形成冲四局面 ---
+    function hasForcingMove(row, col, piece) {
+        const directions = [
+            {dr: 1, dc: 0},  // 水平
+            {dr: 0, dc: 1},  // 垂直
+            {dr: 1, dc: 1},  // 主对角线
+            {dr: 1, dc: -1}  // 副对角线
+        ];
+        
+        const pieceChar = piece.toString();
+        
+        for (const {dr, dc} of directions) {
+            const line = extractLine(row, col, dr, dc, 5);
+            
+            // 检查是否形成冲四
+            if (line.includes(`${pieceChar.repeat(4)}0`) || 
+                line.includes(`0${pieceChar.repeat(4)}`) ||
+                line.includes(`${pieceChar}0${pieceChar.repeat(3)}`) ||
+                line.includes(`${pieceChar.repeat(2)}0${pieceChar.repeat(2)}`) ||
+                line.includes(`${pieceChar.repeat(3)}0${pieceChar}`)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    // --- 找出所有的防守点 ---
+    function findDefensePoints(attackerPiece) {
+        const defensePoints = [];
+        
+        // 遍历棋盘寻找攻击点
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if (board[i][j] === attackerPiece) {
+                    // 检查四个方向
+                    const directions = [
+                        {dr: 1, dc: 0},  // 水平
+                        {dr: 0, dc: 1},  // 垂直
+                        {dr: 1, dc: 1},  // 主对角线
+                        {dr: 1, dc: -1}  // 副对角线
+                    ];
+                    
+                    for (const {dr, dc} of directions) {
+                        // 检查是否有冲四
+                        for (let offset = -4; offset <= 0; offset++) {
+                            let count = 0;
+                            let emptyPos = null;
+                            
+                            for (let step = 0; step < 5; step++) {
+                                const r = i + dr * (offset + step);
+                                const c = j + dc * (offset + step);
+                                
+                                // 检查边界
+                                if (r < 0 || r >= boardSize || c < 0 || c >= boardSize) {
+                                    count = 0;
+                                    break;
+                                }
+                                
+                                if (board[r][c] === attackerPiece) {
+                                    count++;
+                                } else if (board[r][c] === 0) {
+                                    if (emptyPos === null) {
+                                        emptyPos = {i: r, j: c};
+                                    } else {
+                                        count = 0;
+                                        break;
+                                    }
+                                } else {
+                                    count = 0;
+                                    break;
+                                }
+                            }
+                            
+                            // 如果有一个空位和四个棋子，形成冲四
+                            if (count === 4 && emptyPos !== null) {
+                                defensePoints.push(emptyPos);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // 去重
+        const uniqueDefenses = [];
+        const seen = new Set();
+        
+        for (const point of defensePoints) {
+            const key = `${point.i},${point.j}`;
+            if (!seen.has(key)) {
+                seen.add(key);
+                uniqueDefenses.push(point);
+            }
+        }
+        
+        return uniqueDefenses;
     }
     
     // --- 创建棋盘热力图 ---
@@ -664,11 +935,11 @@
     
     // --- 评估特定位置的价值 ---
     function evaluatePosition(row, col) {
-        // 初始分数是位置价值
-        let score = POSITION_VALUES[row][col] * 2;
-        
         // 空位不计分
         if (board[row][col] !== 0) return 0;
+        
+        // 初始分数是位置价值
+        let score = POSITION_VALUES[row][col] * 2;
         
         // 试探法: 如果AI在此落子会获得多少分
         board[row][col] = aiPiece;
@@ -856,20 +1127,7 @@
         
         for (const {dr, dc} of directions) {
             // 构建当前方向的线
-            let line = '';
-            for (let step = -4; step <= 4; step++) {
-                const r = row + dr * step;
-                const c = col + dc * step;
-                
-                if (r >= 0 && r < boardSize && c >= 0 && c < boardSize) {
-                    line += board[r][c];
-                } else {
-                    line += 'E'; // 边界标记
-                }
-            }
-            
-            // 转换为字符串便于分析
-            line = line.replace(/0/g, '0').replace(/1/g, '1').replace(/2/g, '2').replace(/E/g, 'E');
+            const line = extractLine(row, col, dr, dc, 5);
             
             // 分析威胁棋型
             const score = analyzeThreatLine(line, piece);
@@ -895,13 +1153,24 @@
         
         // 冲四 (需要防守)
         if (line.includes(`${pieceChar.repeat(4)}0`) || 
-            line.includes(`0${pieceChar.repeat(4)}`)) {
+            line.includes(`0${pieceChar.repeat(4)}`) ||
+            line.includes(`${pieceChar}0${pieceChar.repeat(3)}`) ||
+            line.includes(`${pieceChar.repeat(2)}0${pieceChar.repeat(2)}`) ||
+            line.includes(`${pieceChar.repeat(3)}0${pieceChar}`)) {
             return PATTERN_SCORES.FOUR;
         }
         
         // 活三 (可能的威胁)
         if (line.includes(`0${pieceChar.repeat(3)}0`)) {
             return PATTERN_SCORES.OPEN_THREE;
+        }
+        
+        // 眠三
+        if (line.includes(`${pieceChar.repeat(3)}0`) || 
+            line.includes(`0${pieceChar.repeat(3)}`) ||
+            line.includes(`${pieceChar}0${pieceChar.repeat(2)}`) ||
+            line.includes(`${pieceChar.repeat(2)}0${pieceChar}`)) {
+            return PATTERN_SCORES.THREE;
         }
         
         return 0;
@@ -933,7 +1202,7 @@
     function evaluateBoard() {
         let score = 0;
         
-        // 遍历棋盘上的每个位置
+        // 1. 基本棋型评分
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {
                 if (board[i][j] === 0) continue;
@@ -948,6 +1217,78 @@
                 }
             }
         }
+        
+        // 2. 位置战略评分
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if (board[i][j] === 0) continue;
+                
+                // 位置价值
+                if (board[i][j] === aiPiece) {
+                    score += POSITION_VALUES[i][j];
+                } else {
+                    score -= POSITION_VALUES[i][j];
+                }
+                
+                // 控制中心加分
+                const center = Math.floor(boardSize / 2);
+                const distToCenter = Math.abs(i - center) + Math.abs(j - center);
+                
+                if (board[i][j] === aiPiece) {
+                    score += Math.max(0, 8 - distToCenter) * 3;
+                } else {
+                    score -= Math.max(0, 8 - distToCenter) * 3;
+                }
+                
+                // 连接性加分
+                let connectivity = 0;
+                for (let di = -1; di <= 1; di++) {
+                    for (let dj = -1; dj <= 1; dj++) {
+                        if (di === 0 && dj === 0) continue;
+                        
+                        const ni = i + di;
+                        const nj = j + dj;
+                        
+                        if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize && 
+                            board[ni][nj] === board[i][j]) {
+                            connectivity++;
+                        }
+                    }
+                }
+                
+                if (board[i][j] === aiPiece) {
+                    score += connectivity * 5;
+                } else {
+                    score -= connectivity * 5;
+                }
+            }
+        }
+        
+        // 3. 威胁评分
+        let aiThreats = 0;
+        let playerThreats = 0;
+        
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if (board[i][j] === 0) {
+                    // 如果AI在此落子
+                    board[i][j] = aiPiece;
+                    if (hasForcingMove(i, j, aiPiece)) {
+                        aiThreats++;
+                    }
+                    board[i][j] = 0;
+                    
+                    // 如果玩家在此落子
+                    board[i][j] = playerPiece;
+                    if (hasForcingMove(i, j, playerPiece)) {
+                        playerThreats++;
+                    }
+                    board[i][j] = 0;
+                }
+            }
+        }
+        
+        score += aiThreats * 20 - playerThreats * 25;
         
         return score;
     }
@@ -1003,7 +1344,7 @@
         }
         
         // 生成候选着法
-        const candidates = generateCandidates();
+        const candidates = generateSmartCandidates();
         
         // 没有可行的着法
         if (candidates.length === 0) {
@@ -1146,6 +1487,17 @@
             return threatResult;
         }
         
+        // 尝试VCF搜索
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if (board[i][j] !== 0) continue;
+                
+                if (hasNeighbor(i, j, 2) && simulateVCF(i, j, aiPiece, VCF_SEARCH_DEPTH)) {
+                    return {i, j};
+                }
+            }
+        }
+        
         // 使用迭代加深搜索
         return iterativeDeepening(MAX_SEARCH_DEPTH);
     }
@@ -1177,6 +1529,31 @@
                     return {i, j};
                 }
                 board[i][j] = 0;
+            }
+        }
+        
+        // 检查是否有双活三或活四局面
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if (board[i][j] !== 0) continue;
+                
+                // 检测AI的双活三或活四
+                board[i][j] = aiPiece;
+                const aiScore = evaluateThreatPattern(i, j, aiPiece);
+                board[i][j] = 0;
+                
+                if (aiScore >= PATTERN_SCORES.OPEN_FOUR || aiScore >= PATTERN_SCORES.DOUBLE_OPEN_THREE) {
+                    return {i, j};
+                }
+                
+                // 检测并防守玩家的双活三或活四
+                board[i][j] = playerPiece;
+                const playerScore = evaluateThreatPattern(i, j, playerPiece);
+                board[i][j] = 0;
+                
+                if (playerScore >= PATTERN_SCORES.OPEN_FOUR || playerScore >= PATTERN_SCORES.DOUBLE_OPEN_THREE) {
+                    return {i, j};
+                }
             }
         }
         
